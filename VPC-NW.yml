@@ -52,14 +52,14 @@ Resources:
       EnableDnsHostnames: true
       Tags:
         - Key: Name
-          Value: !Ref Env
+          Value: !Ref SystemName
 # InternetGateway
   InternetGateway:
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
         - Key: Name
-          Value: !Ref Env
+          Value: !Ref SystemName
 
   InternetGatewayAttachment:
     Type: AWS::EC2::VPCGatewayAttachment
@@ -125,7 +125,6 @@ Resources:
         - 
           Key: Name
           Value: dbSubnet-awsfc
-
 
   NatGateway1EIP:
     Type: AWS::EC2::EIP
