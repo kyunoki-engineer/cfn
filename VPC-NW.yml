@@ -12,11 +12,6 @@ Parameters:
     Type: String
     Default: sample
 
-  VpcId:
-    Description: "VpcId"
-    Type: String
-    Default: sample-vpcid
-
   VpcCIDR:
     Description: "VpcCIDR"
     Type: String
