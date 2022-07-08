@@ -13,17 +13,17 @@ Parameters:
     Default: sample
 
   VpcId:
-    Description: "VpcId"
-    Type: String
-    Default: sample-vpcid
+    Description: Select VPCID from SSM Prameter Store.
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: sample-DEV-ps-vpcid
 
 Resources:
 # EC2SecurityGroup01
   EC2SecurityGroup01:
     Type: AWS::EC2::SecurityGroup
     Properties:
-        GroupDescription: !Sub ${Env}-EC2SecurityGroup01
-        GroupName: !Sub ${Env}-EC2SecurityGroup01
+        GroupDescription: !Sub ${SystemName}-${Env}-EC2SecurityGroup01
+        GroupName: sampleEC2SecurityGroup01
         VpcId: !Ref VpcId
         SecurityGroupIngress:
         - IpProtocol: tcp
@@ -43,7 +43,7 @@ Resources:
 
         Tags:
           - Key: Name
-            Value: !Sub ${Env}-EC2SecurityGroup01
+            Value: ${SystemName}-${Env}-EC2SecurityGroup01
 
         SecurityGroupEgress:
         - IpProtocol: tcp
@@ -56,7 +56,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: ELB ingress group
-      GroupName: !Sub ${Env}-ELBIngressGroup
+      GroupName:  sampleELBIngressGroup
       VpcId: !Ref VpcId
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -64,38 +64,38 @@ Resources:
           ToPort: 80
       Tags:
           - Key: Name
-            Value: !Sub ${Env}-ELBIngressGroup
+            Value: !Sub ${SystemName}-${Env}-ELBIngressGroup
 
 # DBSecurityGroup01
   DBSecurityGroup01:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: !Sub ${Env}-DBSecurityGroup01
+      GroupDescription: !Sub ${SystemName}-${Env}-DBSecurityGroup01
       VpcId: !Ref VpcId
       SecurityGroupIngress:
         IpProtocol: tcp
         FromPort: 80
         ToPort: 80
-        SourceSecurityGroupId: !Sub ${Env}-EC2SecurityGroup01
+        SourceSecurityGroupId: !Ref EC2SecurityGroup01
       Tags:
           - Key: Name
-            Value: !Sub ${Env}-DBSecurityGroup01
+            Value: !Sub ${SystemName}-${Env}-DBSecurityGroup01
 
 Outputs:
   EC2SecurityGroup01:
     Description: The security group ID to use for public web servers
-    Value: !Sub ${Env}-EC2SecurityGroup01
+    Value: !Ref EC2SecurityGroup01
     Export:
-      Name: !Sub ${Env}-EC2SecurityGroup01
+      Name: EC2SecurityGroup01
 
   ELBIngressGroup:
     Description: The security group ID to use for public web servers
-    Value: !Sub ${Env}-ELBIngressGroup
+    Value: !Ref ELBIngressGroup
     Export:
-      Name: !Sub ${Env}-ELBIngressGroup
+      Name: ELBIngressGroup
 
   DBSecurityGroup01:
     Description: The security group ID to use for public web servers
-    Value: !Sub ${Env}-DBSecurityGroup01
+    Value: !Ref DBSecurityGroup01
     Export:
-      Name: !Sub ${Env}-DBSecurityGroup01
+      Name: DBSecurityGroup01
