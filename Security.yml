@@ -23,7 +23,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
         GroupDescription: !Sub ${SystemName}-${Env}-EC2SecurityGroup01
-        GroupName: sampleEC2SecurityGroup01
+        GroupName: !Sub ${SystemName}-${Env}-EC2SecurityGroup01
         VpcId: !Ref VpcId
         SecurityGroupIngress:
         - IpProtocol: tcp
@@ -43,7 +43,7 @@ Resources:
 
         Tags:
           - Key: Name
-            Value: ${SystemName}-${Env}-EC2SecurityGroup01
+            Value: !Sub ${SystemName}-${Env}-EC2SecurityGroup01
 
         SecurityGroupEgress:
         - IpProtocol: tcp
@@ -56,7 +56,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: ELB ingress group
-      GroupName:  sampleELBIngressGroup
+      GroupName: !Sub ${SystemName}-${Env}-ELBIngressGroup
       VpcId: !Ref VpcId
       SecurityGroupIngress:
         - IpProtocol: tcp
