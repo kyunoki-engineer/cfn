@@ -1,6 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: Working with custom resources and S3
-
 Parameters:
   env:
     Description: hon, dev
