@@ -1,0 +1,101 @@
+AWSTemplateFormatVersion: "2010-09-09" 
+Description: "References to created SecurityGroups"
+
+Parameters:
+  Env:
+    Description: HON, DEV
+    Type: String
+    Default: DEV
+
+  SystemName:
+    Description: Enter SystemName
+    Type: String
+    Default: sample
+
+  VpcId:
+    Description: "VpcId"
+    Type: String
+    Default: sample-vpcid
+
+Resources:
+# EC2SecurityGroup01
+  EC2SecurityGroup01:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+        GroupDescription: !Sub ${Env}-EC2SecurityGroup01
+        GroupName: !Sub ${Env}-EC2SecurityGroup01
+        VpcId: !Ref VpcId
+        SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          CidrIp: 0.0.0.0/0
+
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+
+        Tags:
+          - Key: Name
+            Value: !Sub ${Env}-EC2SecurityGroup01
+
+        SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+# ELBIngressGroup
+  ELBIngressGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: ELB ingress group
+      GroupName: !Sub ${Env}-ELBIngressGroup
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+      Tags:
+          - Key: Name
+            Value: !Sub ${Env}-ELBIngressGroup
+
+# DBSecurityGroup01
+  DBSecurityGroup01:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub ${Env}-DBSecurityGroup01
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        SourceSecurityGroupId: !Sub ${Env}-EC2SecurityGroup01
+      Tags:
+          - Key: Name
+            Value: !Sub ${Env}-DBSecurityGroup01
+
+Outputs:
+  EC2SecurityGroup01:
+    Description: The security group ID to use for public web servers
+    Value: !Sub ${Env}-EC2SecurityGroup01
+    Export:
+      Name: !Sub ${Env}-EC2SecurityGroup01
+
+  ELBIngressGroup:
+    Description: The security group ID to use for public web servers
+    Value: !Sub ${Env}-ELBIngressGroup
+    Export:
+      Name: !Sub ${Env}-ELBIngressGroup
+
+  DBSecurityGroup01:
+    Description: The security group ID to use for public web servers
+    Value: !Sub ${Env}-DBSecurityGroup01
+    Export:
+      Name: !Sub ${Env}-DBSecurityGroup01
