@@ -1,0 +1,24 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Working with custom resources and S3
+
+Parameters:
+  env:
+    Description: hon, dev
+    Type: String
+    Default: dev
+
+  SystemName:
+    Description: Enter SystemName
+    Type: String
+    Default: sample
+
+  VpcId:
+    Description: Select VPCID from SSM Prameter Store.
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: sample-DEV-ps-vpcid
+
+Resources:
+  MyS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${SystemName}-${env}-ss-s3bucket
