@@ -12,10 +12,15 @@ Parameters:
     Type: String
     Default: sample
 
-  VpcCIDR:
-    Description: "VpcCIDR"
-    Type: String
-    Default: "10.0.0.0/16"
+  VpcId:
+    Description: Select VPCID from SSM Prameter Store.
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: sample-DEV-ps-vpcid
+
+  VpcCidr:
+    Description: Select VPCCIDR from SSM Prameter Store.
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: sample-DEV-ps-vpccidr
 
   PublicSubnet1CIDR:
     Description: "PublicSubnet1aCIDR"
@@ -42,7 +47,7 @@ Resources:
   VPC:
     Type: AWS::EC2::VPC
     Properties:
-      CidrBlock: !Ref VpcCIDR
+      CidrBlock: !Ref VpcCidr
       EnableDnsSupport: true
       EnableDnsHostnames: true
       Tags:
