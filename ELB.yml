@@ -73,29 +73,6 @@ Resources:
       - !ImportValue PublicSubnet1
       - !ImportValue PublicSubnet2
 
-      # Listeners:
-      # - InstancePort: '80'
-      #   InstanceProtocol: HTTP
-      #   LoadBalancerPort: '80'
-      #   Protocol: HTTP
-      #   PolicyNames: 
-      #   - My-SSLNegotiation-Policy
-        # SSLCertificateId: arn:aws:iam::123456789012:server-certificate/my-server-certificate
-
-      # HealthCheck:
-      #   Target: HTTP:80/
-      #   HealthyThreshold: '5'
-      #   UnhealthyThreshold: '2'
-      #   Interval: '30'
-      #   Timeout: '5'
-
-      # Policies:
-      # - PolicyName: My-SSLNegotiation-Policy
-      #   PolicyType: SSLNegotiationPolicyType
-      #   Attributes:
-      # - Name: Reference-Security-Policy
-      #   Value: ELBSecurityPolicy-TLS-1-2-2017-01
-
 # albListener 
   sampleALBListener:
     Type: "AWS::ElasticLoadBalancingV2::Listener"
