@@ -42,4 +42,9 @@ Resources:
         Ebs:
           VolumeSize: 8
 
-
+Outputs:
+  PublicSubnets:
+    Description: sampleEC2Instance
+    Value: !Ref sampleEC2Instance
+    Export:
+      Name: sampleEC2Instance

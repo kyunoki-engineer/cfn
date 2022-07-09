@@ -11,12 +11,14 @@ Parameters:
     Description: Enter SystemName
     Type: String
     Default: sample
+
+Resources:
 # elb 
   aELB:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
     Properties:
       Instances:
-        - Ref: sampleEC2Instance
+        - !ImportValue sampleEC2Instance
       Subnets: 
       - !ImportValue PublicSubnet1
       SecurityGroups:
