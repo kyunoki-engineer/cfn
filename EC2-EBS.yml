@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: References to created EC2, EBS
+
+Parameters:
+  Env:
+    Description: HON, DEV
+    Type: String
+    Default: DEV
+
+  SystemName:
+    Description: Enter SystemName
+    Type: String
+    Default: sample
+
+  # EC2のキーペアの名前を定義し、スタック作成時にコンソールで指定する
+  KeyName:
+    Type: "AWS::EC2::KeyPair::KeyName"
+    Default: "sample-DEV"
+  
+  ImageId: 
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: sample-DEV-ec2-ImageId
+
+Resources:
+#EC2
+  sampleEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref ImageId
+      SubnetId: !ImportValue PublicSubnet1
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      AvailabilityZone: "ap-northeast-1a"
+      SecurityGroupIds:
+        - !ImportValue EC2SecurityGroup01
+      Tags:
+          - Key: Name
+            Value: sample-ec2
+# ebs
+      BlockDeviceMappings:
+      - DeviceName: /dev/xvda
+        Ebs:
+          VolumeSize: 8
+
+
