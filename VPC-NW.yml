@@ -232,6 +232,8 @@ Outputs:
   PublicSubnet2:
     Description: A reference to the public subnet in the 2nd Availability Zone
     Value: !Ref PublicSubnet2
+    Export:
+      Name: PublicSubnet2
 
   PrivateSubnet1:
     Description: A reference to the private subnet in the 1st Availability Zone

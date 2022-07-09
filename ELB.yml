@@ -12,35 +12,97 @@ Parameters:
     Type: String
     Default: sample
 
+  VpcId:
+    Description: Select VPCID from SSM Prameter Store.
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: sample-DEV-ps-vpcid
+
 Resources:
-# elb 
-  aELB:
-    Type: AWS::ElasticLoadBalancing::LoadBalancer
+#  TargetGroup
+  sampleTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties: 
+      VpcId: !Ref VpcId
+      Name: sampleTargetGroup
+      Protocol: HTTP
+      Port: 80
+      HealthCheckProtocol: HTTP
+      HealthCheckPath: "/"
+      HealthCheckPort: "traffic-port"
+      HealthyThresholdCount: 2
+      UnhealthyThresholdCount: 2
+      HealthCheckTimeoutSeconds: 5
+      HealthCheckIntervalSeconds: 10
+      Matcher: 
+        HttpCode: 200
+      Tags: 
+        - Key: Name
+          Value: sampleTargetGroup
+      TargetGroupAttributes: 
+        - Key: "deregistration_delay.timeout_seconds"
+          Value: 300
+        - Key: "stickiness.enabled"
+          Value: false
+        - Key: "stickiness.type"
+          Value: lb_cookie
+        - Key: "stickiness.lb_cookie.duration_seconds"
+          Value: 86400
+      Targets: 
+        - Id: !ImportValue Rubyweb1
+          Port: 80
+        - Id: !ImportValue Rubyweb2
+          Port: 80
+
+# ALB 
+  sampleALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Instances:
-        - !ImportValue sampleEC2Instance
-      Subnets: 
-      - !ImportValue PublicSubnet1
+      Name: sampleALB
+      Tags:
+        - Key: Name
+          Value: sampleALB
+      Scheme: "internet-facing"
+      LoadBalancerAttributes:
+        - Key: "deletion_protection.enabled"
+          Value: false
+        - Key: "idle_timeout.timeout_seconds"
+          Value: 60
       SecurityGroups:
       - !ImportValue ELBIngressGroup
-      CrossZone: true
-      Listeners:
-      - InstancePort: '80'
-        InstanceProtocol: HTTP
-        LoadBalancerPort: '80'
-        Protocol: HTTP
+      Subnets: 
+      - !ImportValue PublicSubnet1
+      - !ImportValue PublicSubnet2
+
+      # Listeners:
+      # - InstancePort: '80'
+      #   InstanceProtocol: HTTP
+      #   LoadBalancerPort: '80'
+      #   Protocol: HTTP
       #   PolicyNames: 
       #   - My-SSLNegotiation-Policy
         # SSLCertificateId: arn:aws:iam::123456789012:server-certificate/my-server-certificate
-      HealthCheck:
-        Target: HTTP:80/
-        HealthyThreshold: '5'
-        UnhealthyThreshold: '2'
-        Interval: '30'
-        Timeout: '5'
-      Policies:
-      - PolicyName: My-SSLNegotiation-Policy
-        PolicyType: SSLNegotiationPolicyType
-        Attributes:
-        - Name: Reference-Security-Policy
-          Value: ELBSecurityPolicy-TLS-1-2-2017-01
+
+      # HealthCheck:
+      #   Target: HTTP:80/
+      #   HealthyThreshold: '5'
+      #   UnhealthyThreshold: '2'
+      #   Interval: '30'
+      #   Timeout: '5'
+
+      # Policies:
+      # - PolicyName: My-SSLNegotiation-Policy
+      #   PolicyType: SSLNegotiationPolicyType
+      #   Attributes:
+      # - Name: Reference-Security-Policy
+      #   Value: ELBSecurityPolicy-TLS-1-2-2017-01
+
+# albListener 
+  sampleALBListener:
+    Type: "AWS::ElasticLoadBalancingV2::Listener"
+    Properties: 
+      DefaultActions: 
+        - TargetGroupArn: !Ref sampleTargetGroup
+          Type: forward
+      LoadBalancerArn: !Ref sampleALB
+      Port: 80
+      Protocol: HTTP

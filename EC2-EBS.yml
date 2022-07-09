@@ -23,7 +23,7 @@ Parameters:
 
 Resources:
 #EC2
-  sampleEC2Instance:
+  Rubyweb1:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: !Ref ImageId
@@ -35,7 +35,26 @@ Resources:
         - !ImportValue EC2SecurityGroup01
       Tags:
           - Key: Name
-            Value: sample-ec2
+            Value: sample-ec2-Rubyweb1
+# ebs
+      BlockDeviceMappings:
+      - DeviceName: /dev/xvda
+        Ebs:
+          VolumeSize: 8
+
+  Rubyweb2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref ImageId
+      SubnetId: !ImportValue PublicSubnet2
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      AvailabilityZone: "ap-northeast-1c"
+      SecurityGroupIds:
+        - !ImportValue EC2SecurityGroup02
+      Tags:
+          - Key: Name
+            Value: sample-ec2-Rubyweb2
 # ebs
       BlockDeviceMappings:
       - DeviceName: /dev/xvda
@@ -43,8 +62,14 @@ Resources:
           VolumeSize: 8
 
 Outputs:
-  PublicSubnets:
-    Description: sampleEC2Instance
-    Value: !Ref sampleEC2Instance
+  Rubyweb1:
+    Description: Rubyweb1
+    Value: !Ref Rubyweb1
     Export:
-      Name: sampleEC2Instance
+      Name: Rubyweb1
+
+  Rubyweb2:
+    Description: Rubyweb2
+    Value: !Ref Rubyweb2
+    Export:
+      Name: Rubyweb2
