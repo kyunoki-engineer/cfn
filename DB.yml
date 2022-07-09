@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: References to created DB
+
+Parameters:
+  Env:
+    Description: HON, DEV
+    Type: String
+    Default: DEV
+
+  SystemName:
+    Description: Enter SystemName
+    Type: String
+    Default: sample
+
+# DBInstance
+  sampleDBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties: 
+      AllocatedStorage: '20'
+      AutoMinorVersionUpgrade: false
+      AvailabilityZone: "ap-northeast-1a"
+      BackupRetentionPeriod: 7
+      CopyTagsToSnapshot: false
+      DBInstanceClass: db.t2.micro
+      DBInstanceIdentifier: "sample-rds"
+      DBName: sampleDB
+      VPCSecurityGroups: 
+       - !ImportValue DBSecurityGroup01
+      DBSubnetGroupName: !ImportValue DBSubnetGroup
+      DeleteAutomatedBackups: false
+      DeletionProtection: false
+      EnableIAMDatabaseAuthentication: false
+      EnablePerformanceInsights: false
+      Engine: MySQL
+      EngineVersion: 8.0.27
+      LicenseModel: general-public-license
+      MasterUsername: root
+      MasterUserPassword: password094649
+      MaxAllocatedStorage: 25
+      MonitoringInterval: 0
+      MultiAZ: false
+      OptionGroupName: default:mysql-8-0
+      Port: 3306
+      PreferredBackupWindow: "18:00-18:30"
+      PreferredMaintenanceWindow: "thu:19:40-thu:20:10"
+      PubliclyAccessible: false
+      StorageEncrypted: false
+      StorageType: "gp2"
+      UseDefaultProcessorFeatures: false
+      Tags:
+          - Key: Name
+            Value: sample-db
