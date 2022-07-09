@@ -114,7 +114,7 @@ Resources:
       Tags: 
         - 
           Key: Name
-          Value: dbSubnet-awsfc
+          Value: sample-dbSubnet
 
   NatGateway1EIP:
     Type: AWS::EC2::EIP

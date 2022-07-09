@@ -55,7 +55,7 @@ Resources:
   ELBIngressGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: ELB ingress group
+      GroupDescription: ELBingressgroup
       GroupName: !Sub ${SystemName}-${Env}-ELBIngressGroup
       VpcId: !Ref VpcId
       SecurityGroupIngress:
