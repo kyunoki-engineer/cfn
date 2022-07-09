@@ -12,6 +12,7 @@ Parameters:
     Type: String
     Default: sample
 
+Resources:
 # DBInstance
   sampleDBInstance:
     Type: AWS::RDS::DBInstance
@@ -23,7 +24,7 @@ Parameters:
       CopyTagsToSnapshot: false
       DBInstanceClass: db.t2.micro
       DBInstanceIdentifier: "sample-rds"
-      DBName: sampleDB
+      DBName: !Sub ${SystemName}-${Env}-DB
       VPCSecurityGroups: 
        - !ImportValue DBSecurityGroup01
       DBSubnetGroupName: !ImportValue DBSubnetGroup
@@ -49,4 +50,4 @@ Parameters:
       UseDefaultProcessorFeatures: false
       Tags:
           - Key: Name
-            Value: sample-db
+            Value: !Sub ${SystemName}-${Env}-db
