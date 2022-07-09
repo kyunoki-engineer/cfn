@@ -17,3 +17,14 @@ Cloudformationテンプレートを作成している。
  ・AppS3bucket.yml
  
  　S3bucketを構築
+
+・EC2-EBS.yml
+
+  EC2、EBSなどの構築
+  
+・ELB.yml
+
+  ELBの構築
+  
+・DB.yml
+  DBの構築
