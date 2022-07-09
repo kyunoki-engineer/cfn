@@ -27,4 +27,5 @@ Cloudformationテンプレートを作成している。
   ELBの構築
   
 ・DB.yml
+
   DBの構築
