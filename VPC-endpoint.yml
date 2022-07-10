@@ -1,0 +1,57 @@
+Description: References to created VPCendpoint. 
+
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  Env:
+    Description: HON, DEV
+    Type: String
+    Default: DEV
+
+  SystemName:
+    Description: Enter SystemName
+    Type: String
+    Default: sample
+
+  VpcId:
+    Description: Select VPCID from SSM Prameter Store.
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: sample-DEV-ps-vpcid
+
+  VpcCidr:
+    Description: Select VPCCIDR from SSM Prameter Store.
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: sample-DEV-ps-vpccidr
+
+  RouteTableId:
+    Description: Select RouteTableID from for using VPC Endpoints from SSM Parameter Store.
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: sample-DEV-ps-routetableid-public
+
+Resources:
+  S3Endpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties: 
+      RouteTableIds: 
+        - !Ref RouteTableId
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.s3'
+      VpcId: !Ref VpcId
+      VpcEndpointType: Gateway
+      # PrivateDnsEnabled: true
+
+  # EndpointSecurityGroup:
+  #   Type: AWS::EC2::SecurityGroup
+  #   Properties: 
+  #     GroupName: !Sub SG-${SystemName}-${Env}-endpoint-01
+  #     GroupDescription: Allow https from VPC
+  #     VpcId: !Ref VpcId
+  #     SecurityGroupIngress:
+  #       - IpProtocol: tcp
+  #         FromPort: 80
+  #         ToPort: 80
+  #       - IpProtocol: tcp
+  #         FromPort: 443
+  #         ToPort: 443
+  #         CidrIp: !Ref VpcCidr
+  #     Tags: 
+  #       - Key  : Name
+  #         Value: !Sub SG-${SystemName}-${Env}-endpoint-01
