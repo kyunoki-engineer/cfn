@@ -27,12 +27,18 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: !Ref ImageId
-      SubnetId: !ImportValue PublicSubnet1
+      AvailabilityZone: "ap-northeast-1a"
       InstanceType: t2.micro
       KeyName: !Ref KeyName
-      AvailabilityZone: "ap-northeast-1a"
-      SecurityGroupIds:
-        - !ImportValue EC2SecurityGroup01
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          SubnetId: !ImportValue PublicSubnet1
+          GroupSet:
+           - !ImportValue EC2SecurityGroup01
+      # SubnetId: !ImportValue PublicSubnet1
+      # SecurityGroupIds:
+      #   - !ImportValue EC2SecurityGroup01
       Tags:
           - Key: Name
             Value: sample-ec2-Rubyweb1
@@ -46,12 +52,18 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: !Ref ImageId
-      SubnetId: !ImportValue PublicSubnet2
+      AvailabilityZone: "ap-northeast-1c"
       InstanceType: t2.micro
       KeyName: !Ref KeyName
-      AvailabilityZone: "ap-northeast-1c"
-      SecurityGroupIds:
-        - !ImportValue EC2SecurityGroup02
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          SubnetId: !ImportValue PublicSubnet2
+          GroupSet:
+           - !ImportValue EC2SecurityGroup02
+      # SubnetId: !ImportValue PublicSubnet2
+      # SecurityGroupIds:
+      #   - !ImportValue EC2SecurityGroup02
       Tags:
           - Key: Name
             Value: sample-ec2-Rubyweb2
