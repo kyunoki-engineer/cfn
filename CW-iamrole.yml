@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: References to created SNS Topic
+
+Parameters:
+  Env:
+    Description: HON, DEV
+    Type: String
+    Default: DEV
+
+  SystemName:
+    Description: Enter SystemName
+    Type: String
+    Default: sample
+
+ SNSTopicName:
+    Description: SNS Topic Name
+    Type: String
+    Default: arn:aws:sns:XXXXXXXXXXX  # SNS トピック
+
+Type: AWS::IAM::Role
+Properties: 
+  AssumeRolePolicyDocument: Json
+  Description: String
+  ManagedPolicyArns: 
+    - String
+  MaxSessionDuration: Integer
+  Path: String
+  PermissionsBoundary: String
+  Policies: 
+    - Policy
+  RoleName: String
+  Tags: 
+    - Tag

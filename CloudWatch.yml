@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: References to created CW
+
+Parameters:
+  Env:
+    Description: HON, DEV
+    Type: String
+    Default: DEV
+
+  SystemName:
+    Description: Enter SystemName
+    Type: String
+    Default: sample
+ SNSTopicName:
+    Description: SNS Topic Name
+    Type: String
+    Default: arn:aws:sns:XXXXXXXXXXX  # SNS トピック
+
+Resources:
+  #ALB死活監視アラーム作成
+  SNSStatusChekFailedAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: "ut-ALB"
+      AlarmDescription: "Alarm for monitoring HealthyHostCount"
+      ActionsEnabled: true
+      AlarmActions: 
+      - !ImportValue ut-sns-topic-arn
+      MetricName: "HealthyHostCount"
+      Namespace: "AWS/ApplicationELB"
+      Statistic: "Minimum"
+      Dimensions: 
+      - 
+        Name: "TargetGroup"
+        Value: !ImportValue ut-tgn-fullname
+      - 
+        Name: "LoadBalancer"
+        Value: !ImportValue ut-alb-fullname
+      Period: 60
+      EvaluationPeriods: 2
+      Threshold: 1
+      ComparisonOperator: "LessThanOrEqualToThreshold"
+      TreatMissingData: "missing"
