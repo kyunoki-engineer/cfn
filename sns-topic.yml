@@ -1,0 +1,50 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: References to created SNS Topic
+
+Parameters:
+  Env:
+    Description: HON, DEV
+    Type: String
+    Default: DEV
+
+  SystemName:
+    Description: Enter SystemName
+    Type: String
+    Default: sample
+
+Resources:
+  EC2StatusSnsTopic:
+    Type: AWS::SNS::Topic
+    Properties: 
+      TopicName: EC2Status-Sns-Topic.fifo
+      FifoTopic: true
+      DisplayName: EC2StatusSnsTopic
+      Tags: 
+          - Key: Name
+            Value: !Sub ${SystemName}-${Env}-EC2StatusSnsTopic
+
+  SnsIamRole:
+    Type: "AWS::IAM::Role"
+    Properties: 
+      RoleName: SnsTopicCreateRole
+      AssumeRolePolicyDocument: 
+        Version": "2012-10-17"
+        "Statement": 
+          - Effect: Allow
+            Principal:
+              Service:
+                - sns.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'    
+      # Path: /
+      # Policies: 
+      #   - 
+      Description: SnsIamRole
+      ManagedPolicyArns: 
+        - 'arn:aws:iam::aws:policy/AmazonSNSFullAccess'
+      MaxSessionDuration: 3600
+      # PermissionsBoundary: String
+      Tags: 
+          - Key: Name
+            Value: !Sub ${SystemName}-${Env}-EC2StatusSnsTopic
+
