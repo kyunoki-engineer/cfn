@@ -1,0 +1,71 @@
+Description: Template to be added to the parameter store. 
+
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  Env:
+    Description: HON, DEV
+    Type: String
+    Default: DEV
+
+  SystemName:
+    Description: Enter SystemName
+    Type: String
+    Default: sample
+
+Resources:
+  VpcId:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: !Sub ${Env}-${SystemName}-ps-vpcid
+      Description: Create VPCID in SSM Parameter Store.
+      Type: String
+      Value: vpc-0679061b4af13ed9e
+
+  VpcCidr:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: !Sub ${Env}-${SystemName}-ps-vpccidr
+      Description: Create VPC Cider in SSM Parameter Store.
+      Type: String
+      Value: 10.0.0.0/16
+
+  # Ec2Image:
+  #   Type: AWS::SSM::Parameter
+  #   Properties: 
+  #     Name: !Sub ${Env}-${SystemName}-ec2-ImageId
+  #     Description: Create EC2 image in SSM Parameter Store.
+  #     Type: String
+  #     DataType: aws:ec2:image
+  #     Value: ami-0b7546e839d7ace12
+
+  # routetableid-private:
+  #   Type: AWS::SSM::Parameter
+  #   Properties: 
+  #     Name: !Sub ${Env}-${SystemName}-ps-routetableid-private
+  #     Description: Create a private routetableid for the VPC in the SSM Parameter Store.
+  #     Type: String
+  #     Value: rtb-019573fc78d714f936
+
+  # subnetids-private:
+  #   Type: AWS::SSM::Parameter
+  #   Properties: 
+  #     Name: !Sub ${Env}-${SystemName}-ps-routetableid-private
+  #     Description: Create a private subnetids for the VPC in the SSM Parameter Store.
+  #     Type: StringList
+  #     Value: 10.0.2.0/24,10.0.3.0/24
+
+  # routetableid-public:
+  #   Type: AWS::SSM::Parameter
+  #   Properties: 
+  #     Name: !Sub ${Env}-${SystemName}-ps-routetableid-public
+  #     Description: Create a public routetableid for the VPC in the SSM Parameter Store.
+  #     Type: String
+  #     Value: rtb-0104b9cf6516f6b3f
+
+  # subnetids-public:
+  #   Type: AWS::SSM::Parameter
+  #   Properties: 
+  #     Name: !Sub ${Env}-${SystemName}-ps-routetableid-private
+  #     Description: Create a public subnetids for the VPC in the SSM Parameter Store.
+  #     Type: StringList
+  #     Value: 10.0.0.0/24,10.0.1.0/24
