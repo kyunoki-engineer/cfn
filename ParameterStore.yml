@@ -1,8 +1,8 @@
 Description: Template to be added to the parameter store. 
 
 AWSTemplateFormatVersion: "2010-09-09"
-Parameters:
 
+Parameters:
   SystemName:
     Description: Enter SystemName
     Type: String
@@ -46,13 +46,21 @@ Resources:
   #     Type: String
   #     Value: rtb-019573fc78d714f936
 
-  # PrivateSubnetids:
-  #   Type: AWS::SSM::Parameter
-  #   Properties: 
-  #     Name: !Sub ${SystemName}-${Env}-ps-routetableid-private
-  #     Description: Create a private subnetids for the VPC in the SSM Parameter Store.
-  #     Type: StringList
-  #     Value: 10.0.2.0/24,10.0.3.0/24
+  PrivateSubnetid1:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: !Sub ${SystemName}-${Env}-ps-subnetid1-private
+      Description: Create a private subnetids for the VPC in the SSM Parameter Store.
+      Type: String
+      Value: 10.0.2.0/24
+
+  PrivateSubnetid2:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: !Sub ${SystemName}-${Env}-ps-subnetid2-private
+      Description: Create a private subnetids for the VPC in the SSM Parameter Store.
+      Type: String
+      Value: 10.0.3.0/24
 
   PublicRoutetableid:
     Type: AWS::SSM::Parameter
@@ -62,10 +70,18 @@ Resources:
       Type: String
       Value: rtb-0441c57d6244ac408
 
-  PublicSubnetids:
+  PublicSubnetid1:
     Type: AWS::SSM::Parameter
     Properties: 
-      Name: !Sub ${SystemName}-${Env}-ps-routetableid-private
+      Name: !Sub ${SystemName}-${Env}-ps-subnetid1-public
       Description: Create a public subnetids for the VPC in the SSM Parameter Store.
-      Type: StringList
-      Value: 10.0.0.0/24,10.0.1.0/24
+      Type: String
+      Value: 10.0.0.0/24
+
+  PublicSubnetid2:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: !Sub ${SystemName}-${Env}-ps-subnetid2-public
+      Description: Create a public subnetids for the VPC in the SSM Parameter Store.
+      Type: String
+      Value: 10.0.1.0/24

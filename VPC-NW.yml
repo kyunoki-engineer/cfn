@@ -24,21 +24,23 @@ Parameters:
 
   PublicSubnet1CIDR:
     Description: "PublicSubnet1aCIDR"
-    Type: String
-    Default: "10.0.0.0/24"
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    # Type: String
+    Default: sample-DEV-ps-subnetid1-public
   
   PublicSubnet2CIDR:
     Description: "PublicSubnet2CIDR:"
-    Type: String
-    Default: "10.0.1.0/24"
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    # Type: String
+    Default: sample-DEV-ps-subnetid2-public
   
   PrivateSubnet1CIDR:
-    Description: "PublicSubnet1CIDR"
+    Description: "PrivateSubnet1CIDR"
     Type: String
     Default: "10.0.2.0/24"
   
   PrivateSubnet2CIDR:
-    Description: "PublicSubnet2CIDR"
+    Description: "PrivateSubnet2CIDR"
     Type: String
     Default: "10.0.3.0/24"
 
@@ -56,6 +58,7 @@ Resources:
     Properties:
       InternetGatewayId: !Ref InternetGateway
       VpcId: !Ref VpcId 
+
 # PublicSubnet
   PublicSubnet1:
     Type: AWS::EC2::Subnet
@@ -116,29 +119,29 @@ Resources:
           Key: Name
           Value: sample-dbSubnet
 
-  NatGateway1EIP:
-    Type: AWS::EC2::EIP
-    DependsOn: InternetGatewayAttachment
-    Properties:
-      Domain: vpc
+  # NatGateway1EIP:
+  #   Type: AWS::EC2::EIP
+  #   DependsOn: InternetGatewayAttachment
+  #   Properties:
+  #     Domain: vpc
 
-  NatGateway2EIP:
-    Type: AWS::EC2::EIP
-    DependsOn: InternetGatewayAttachment
-    Properties:
-      Domain: vpc
+  # NatGateway2EIP:
+  #   Type: AWS::EC2::EIP
+  #   DependsOn: InternetGatewayAttachment
+  #   Properties:
+  #     Domain: vpc
 
-  NatGateway1:
-    Type: AWS::EC2::NatGateway
-    Properties:
-      AllocationId: !GetAtt NatGateway1EIP.AllocationId
-      SubnetId: !Ref PublicSubnet1
+  # NatGateway1:
+  #   Type: AWS::EC2::NatGateway
+  #   Properties:
+  #     AllocationId: !GetAtt NatGateway1EIP.AllocationId
+  #     SubnetId: !Ref PublicSubnet1
 
-  NatGateway2:
-    Type: AWS::EC2::NatGateway
-    Properties:
-      AllocationId: !GetAtt NatGateway2EIP.AllocationId
-      SubnetId: !Ref PublicSubnet2
+  # NatGateway2:
+  #   Type: AWS::EC2::NatGateway
+  #   Properties:
+  #     AllocationId: !GetAtt NatGateway2EIP.AllocationId
+  #     SubnetId: !Ref PublicSubnet2
 
 #PublicSubnetに紐づけされる
   PublicRouteTable:
@@ -177,7 +180,8 @@ Resources:
     Properties:
       RouteTableId: !Ref PrivateRouteTable1
       DestinationCidrBlock: 0.0.0.0/0
-      NatGatewayId: !Ref NatGateway1
+      # NatGatewayId: !Ref NatGateway1
+      GatewayId: !Ref InternetGateway
 
   PrivateSubnet1RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
@@ -198,7 +202,8 @@ Resources:
     Properties:
       RouteTableId: !Ref PrivateRouteTable2
       DestinationCidrBlock: 0.0.0.0/0
-      NatGatewayId: !Ref NatGateway2
+      # NatGatewayId: !Ref NatGateway2
+      GatewayId: !Ref InternetGateway
 
   PrivateSubnet2RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
