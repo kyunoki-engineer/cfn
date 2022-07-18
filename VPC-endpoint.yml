@@ -25,7 +25,7 @@ Parameters:
   RouteTableId:
     Description: Select RouteTableID from for using VPC Endpoints from SSM Parameter Store.
     Type: AWS::SSM::Parameter::Value<String>
-    Default: sample-DEV-ps-routetableid-public
+    Default: sample-DEV-ps-routetableid-private
 
 Resources:
   S3Endpoint:
@@ -38,20 +38,37 @@ Resources:
       VpcEndpointType: Gateway
       # PrivateDnsEnabled: true
 
-  # EndpointSecurityGroup:
-  #   Type: AWS::EC2::SecurityGroup
-  #   Properties: 
-  #     GroupName: !Sub SG-${SystemName}-${Env}-endpoint-01
-  #     GroupDescription: Allow https from VPC
-  #     VpcId: !Ref VpcId
-  #     SecurityGroupIngress:
-  #       - IpProtocol: tcp
-  #         FromPort: 80
-  #         ToPort: 80
-  #       - IpProtocol: tcp
-  #         FromPort: 443
-  #         ToPort: 443
-  #         CidrIp: !Ref VpcCidr
-  #     Tags: 
-  #       - Key  : Name
-  #         Value: !Sub SG-${SystemName}-${Env}-endpoint-01
+  EndpointSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupName: !Sub SG-${SystemName}-${Env}-endpoint-01
+      GroupDescription: Allow https from VPC
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: !Ref VpcCidr
+      Tags: 
+        - Key  : Name
+          Value: !Sub SG-${SystemName}-${Env}-endpoint-01
+
+  CwlogEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties: 
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}logs'
+      SubnetIds: 
+        - String
+      VpcId: !Ref VpcId
+      VpcEndpointType: String
+      SecurityGroupIds: 
+        - String
+      PrivateDnsEnabled: Boolean
+      
+      # PolicyDocument: Json
+      # RouteTableIds: 
+      #   - String
+    
