@@ -28,6 +28,7 @@ Parameters:
     Default: sample-DEV-ps-routetableid-private
 
 Resources:
+#S3endpoint
   S3Endpoint:
     Type: AWS::EC2::VPCEndpoint
     Properties: 
@@ -36,9 +37,9 @@ Resources:
       ServiceName: !Sub 'com.amazonaws.${AWS::Region}.s3'
       VpcId: !Ref VpcId
       VpcEndpointType: Gateway
-      # PrivateDnsEnabled: true
 
-  EndpointSecurityGroup:
+#Cwlog
+  CwlogEndpointSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties: 
       GroupName: !Sub SG-${SystemName}-${Env}-endpoint-01
@@ -60,15 +61,250 @@ Resources:
     Type: AWS::EC2::VPCEndpoint
     Properties: 
       ServiceName: !Sub 'com.amazonaws.${AWS::Region}logs'
-      SubnetIds: 
-        - String
+      SubnetIds: !Ref SubnetIds
       VpcId: !Ref VpcId
-      VpcEndpointType: String
+      VpcEndpointType: Interface
       SecurityGroupIds: 
-        - String
-      PrivateDnsEnabled: Boolean
+        - !Ref CwlogEndpointSecurityGroup
+      PrivateDnsEnabled: true
+
+#Ecrdkr
+  EcrdkrEndpointSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupName: !Sub SG-${SystemName}-${Env}-endpoint-ecrdkr
+      GroupDescription: Allow https from VPC
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: !Ref VpcCidr
+      Tags: 
+        - Key  : Name
+          Value: !Sub SG-${SystemName}-${Env}-endpoint-ecrdkr
       
-      # PolicyDocument: Json
-      # RouteTableIds: 
-      #   - String
-    
+  EcrdkrEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties: 
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}ecr.dkr'
+      SubnetIds: !Ref SubnetIds
+      VpcId: !Ref VpcId
+      VpcEndpointType: Interface
+      SecurityGroupIds: 
+        - !Ref EcrdkrEndpointSecurityGroup
+      PrivateDnsEnabled: true
+
+#EcrapiEndpoint
+  EcrapiEndpointSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupName: !Sub SG-${SystemName}-${Env}-endpoint-ecrapi
+      GroupDescription: Allow https from VPC
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: !Ref VpcCidr
+      Tags: 
+        - Key  : Name
+          Value: !Sub SG-${SystemName}-${Env}-endpoint-ecrapi
+      
+  EcrapiEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties: 
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}ecr.api'
+      SubnetIds: !Ref SubnetIds
+      VpcId: !Ref VpcId
+      VpcEndpointType: Interface
+      SecurityGroupIds: 
+        - !Ref EcrdkrEndpointSecurityGroup
+      PrivateDnsEnabled: true
+
+#SsmEndpoint
+  SsmEndpointSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupName: !Sub SG-${SystemName}-${Env}-endpoint-ssm
+      GroupDescription: Allow https from VPC
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: !Ref VpcCidr
+      Tags: 
+        - Key  : Name
+          Value: !Sub SG-${SystemName}-${Env}-endpoint-ssm
+      
+  SsmEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties: 
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}ssm'
+      SubnetIds: !Ref SubnetIds
+      VpcId: !Ref VpcId
+      VpcEndpointType: Interface
+      SecurityGroupIds: 
+        - !Ref SsmEndpointSecurityGroup
+      PrivateDnsEnabled: true
+
+#Ec2messagesEndpoint
+  Ec2messagesEndpointSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupName: !Sub SG-${SystemName}-${Env}-endpoint-ec2messages
+      GroupDescription: Allow https from VPC
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: !Ref VpcCidr
+      Tags: 
+        - Key  : Name
+          Value: !Sub SG-${SystemName}-${Env}-endpoint-ec2messages
+      
+  Ec2messagesEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties: 
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}ec2messages'
+      SubnetIds: !Ref SubnetIds
+      VpcId: !Ref VpcId
+      VpcEndpointType: Interface
+      SecurityGroupIds: 
+        - !Ref Ec2messagespointSecurityGroup
+      PrivateDnsEnabled: true
+
+#SsmmessagesEndpoint
+  SsmEndpointSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupName: !Sub SG-${SystemName}-${Env}-endpoint-ssmmessages
+      GroupDescription: Allow https from VPC
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: !Ref VpcCidr
+      Tags: 
+        - Key  : Name
+          Value: !Sub SG-${SystemName}-${Env}-endpoint-ssmmessages
+      
+  SsmmessagesEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties: 
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}ssmmessages'
+      SubnetIds: !Ref SubnetIds
+      VpcId: !Ref VpcId
+      VpcEndpointType: Interface
+      SecurityGroupIds: 
+        - !Ref SsmmessagesEndpointSecurityGroup
+      PrivateDnsEnabled: true
+
+#CodedeployEndpoint
+  CodedeployEndpointSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupName: !Sub SG-${SystemName}-${Env}-endpoint-codedeploy
+      GroupDescription: Allow https from VPC
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: !Ref VpcCidr
+      Tags: 
+        - Key  : Name
+          Value: !Sub SG-${SystemName}-${Env}-endpoint-codedeploy
+      
+  CodedeployEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties: 
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}codedeploy'
+      SubnetIds: !Ref SubnetIds
+      VpcId: !Ref VpcId
+      VpcEndpointType: Interface
+      SecurityGroupIds: 
+        - !Ref CodedeployEndpointSecurityGroup
+      PrivateDnsEnabled: true
+      
+#CodedeployCommandsSecureEndpoint:
+  CodedeployCSEndpointSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupName: !Sub SG-${SystemName}-${Env}-endpoint-codedeploy-commands-secure
+      GroupDescription: Allow https from VPC
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: !Ref VpcCidr
+      Tags: 
+        - Key  : Name
+          Value: !Sub SG-${SystemName}-${Env}-endpoint-codedeploy-commands-secure
+      
+  CodedeployCSEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties: 
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}codedeploy-commands-secure'
+      SubnetIds: !Ref SubnetIds
+      VpcId: !Ref VpcId
+      VpcEndpointType: Interface
+      SecurityGroupIds: 
+        - !Ref CodedeployCSEndpointSecurityGroup
+      PrivateDnsEnabled: true
+      
+#SnsEndpoint
+  SnsEndpointSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupName: !Sub SG-${SystemName}-${Env}-endpoint-sns
+      GroupDescription: Allow https from VPC
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: !Ref VpcCidr
+      Tags: 
+        - Key  : Name
+          Value: !Sub SG-${SystemName}-${Env}-endpoint-sns
+      
+  SnsEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties: 
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}sns'
+      SubnetIds: !Ref SubnetIds
+      VpcId: !Ref VpcId
+      VpcEndpointType: Interface
+      SecurityGroupIds: 
+        - !Ref CodedeployCSEndpointSecurityGroup
+      PrivateDnsEnabled: true
+
