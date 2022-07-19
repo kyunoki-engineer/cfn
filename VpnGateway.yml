@@ -1,0 +1,55 @@
+ AWSTemplateFormatVersion: '2010-09-09'
+    Description: 'prepare: Virtual Private Gateway'
+
+Parameters:
+  SystemName:
+    Description: Enter SystemName
+    Type: String
+    Default: sample
+    
+  Env:
+    Description: HON, DEV
+    Type: String
+    Default: DEV
+
+  AmazonSideAsn:
+    Type: Number
+    Description: Input AmazonSideASN(64512-65534)
+    Default: 64513
+
+  VpcId:
+    Description: Select VPCID from SSM Prameter Store.
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: sample-DEV-ps-vpcid
+
+  RouteTableId:
+    Description: Input RouteTableId
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: sample-DEV-ps-routetableid
+
+Resources:
+  VGW:
+    Type: AWS::EC2::VPNGateway
+    DeletionPolicy: Retain #この設定があるとロールバックしない。
+    Properties: 
+      AmazonSideAsn: !Ref 'AmazonSideAsn'
+      Type: ipsec.1
+      Tags:
+        - Key: Name
+          Value: !Sub ${SystemName}-${Env}-ps-vgw
+
+  AttachVPNGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    DeletionPolicy: Retain #この設定があるとロールバックしない。
+    Properties:
+      VpcId: !Ref 'VpcId'
+      VpnGatewayId: !Ref 'VGW'
+
+  EnableVGWPropagation:
+    Type: AWS::EC2::VPNGatewayRoutePropagation
+    DeletionPolicy: Retain
+    DependsOn: AttachVPNGateway
+    Properties:
+      RouteTableIds:
+      - !Ref 'RouteTableId'
+      VpnGatewayId: !Ref 'VGW'
