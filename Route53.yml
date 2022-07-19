@@ -1,0 +1,15 @@
+#VPCの中からネットワークに行く流れでDNS解決する。
+myDNSResolver:
+Type : AWS::Route53Resolver::ResolverEndpoint
+Properties :
+  Direction : Outbound
+  IpAddresses : 
+    - SubnetId: subnet-0bca4d363dexample
+    - SubnetId: subnet-0cdb5e474dexample
+  Name : MyOutboundEndpoint
+  SecurityGroupIds : 
+    - sg-071b99f42example
+  Tags : 
+    - 
+      Key: LineOfBusiness
+      Value: Engineering
