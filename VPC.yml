@@ -22,4 +22,4 @@ Resources:
 
       Tags: 
         - Key: Name
-          Value: !Sub ${SystemName}-${Env}-vpc
+          Value: !Sub ${SystemName}-${Env}-ps-vpc

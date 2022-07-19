@@ -2,15 +2,15 @@ Description: References to created IGW, NatGW, AZ, Subnet,
 
 AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
-  Env:
-    Description: HON, DEV
-    Type: String
-    Default: DEV
-
   SystemName:
     Description: Enter SystemName
     Type: String
     Default: sample
+
+  Env:
+    Description: HON, DEV
+    Type: String
+    Default: DEV
 
   VpcId:
     Description: Select VPCID from SSM Prameter Store.
@@ -43,7 +43,7 @@ Parameters:
     Default: 10.0.3.0/24
 
 Resources:
-# InternetGateway
+# InternetGateway 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
     Properties:

@@ -41,10 +41,10 @@ Resources:
   PrivateRoutetableid:
     Type: AWS::SSM::Parameter
     Properties: 
-      Name: !Sub ${SystemName}-${Env}-ps-routetableid-private
+      Name: !Sub ${SystemName}-${Env}-ps-routetableid-
       Description: Create a private routetableid for the VPC in the SSM Parameter Store.
       Type: String
-      Value: rtb-019573fc78d714f936
+      Value: rtb-0441c57d6244ac408
 
   # PrivateSubnetid1:
   #   Type: AWS::SSM::Parameter
@@ -62,11 +62,11 @@ Resources:
   #     Type: String
   #     Value: 10.0.3.0/24
 
-  PublicRoutetableId:
-    Type: AWS::SSM::Parameter
-    Properties: 
-      Name: !Sub ${SystemName}-${Env}-ps-routetableid-private
-      Description: Create a private routetableid for the VPC in the SSM Parameter Store.
-      Type: String
-      Value: rtb-0441c57d6244ac408
+  # PublicRoutetableId:
+  #   Type: AWS::SSM::Parameter
+  #   Properties: 
+  #     Name: !Sub ${SystemName}-${Env}-ps-routetableid-private
+  #     Description: Create a private routetableid for the VPC in the SSM Parameter Store.
+  #     Type: String
+  #     Value: rtb-0f72bcf39e1657cf9
 
