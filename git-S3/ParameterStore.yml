@@ -19,7 +19,7 @@ Resources:
       Name: !Sub ${SystemName}-${Env}-ps-vpcid
       Description: Create VPCID in SSM Parameter Store.
       Type: String
-      Value: vpc-04802289a9ab053fd
+      Value: vpc-047fee79c7d2ee47d
 
   VpcCidr:
     Type: AWS::SSM::Parameter
@@ -29,22 +29,22 @@ Resources:
       Type: String
       Value: 10.0.0.0/16
 
-  Ec2Image:
-    Type: AWS::SSM::Parameter
-    Properties: 
-      Name: !Sub ${SystemName}-${Env}-ec2-ImageId
-      Description: Create EC2 image in SSM Parameter Store.
-      Type: String
-      DataType: aws:ec2:image
-      Value: ami-0b7546e839d7ace12
+  # Ec2Image:
+  #   Type: AWS::SSM::Parameter
+  #   Properties: 
+  #     Name: !Sub ${SystemName}-${Env}-ec2-ImageId
+  #     Description: Create EC2 image in SSM Parameter Store.
+  #     Type: String
+  #     DataType: aws:ec2:image
+  #     Value: ami-0b7546e839d7ace12
 
   PrivateRoutetableid:
     Type: AWS::SSM::Parameter
     Properties: 
-      Name: !Sub ${SystemName}-${Env}-ps-routetableid-
+      Name: !Sub ${SystemName}-${Env}-ps-routetableid
       Description: Create a private routetableid for the VPC in the SSM Parameter Store.
       Type: String
-      Value: rtb-0441c57d6244ac408
+      Value: rtb-0911fa4697b87f6e0
 
   # PrivateSubnetid1:
   #   Type: AWS::SSM::Parameter
