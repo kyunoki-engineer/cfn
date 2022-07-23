@@ -77,22 +77,7 @@ Parameters:
     Type: String
     Default: 10.0.10.0/24
 
-  
 Resources:
-# InternetGateway 
-  InternetGateway:
-    Type: AWS::EC2::InternetGateway
-    Properties:
-      Tags:
-        - Key: Name
-          Value: !Ref SystemName
-
-  InternetGatewayAttachment:
-    Type: AWS::EC2::VPCGatewayAttachment
-    Properties:
-      InternetGatewayId: !Ref InternetGateway
-      VpcId: !Ref VpcId 
-
 # GenkoSubnet1
   GenkoSubnet1:
     Type: AWS::EC2::Subnet
@@ -141,37 +126,45 @@ Resources:
         - Key: Name
           Value: !Sub ${SystemName}-${Env}-API-Private-Subnet-02
 
-# DbSubnet1
-  DbSubnet1: 
-    Type: AWS::RDS::DBSubnetGroup
+# DBSubnet1
+  DBSubnet1:
+    Type: AWS::EC2::Subnet
     Properties:
-      DBSubnetGroupDescription: DbSubnet
-      DBSubnetGroupName: DbSubnet1
-      SubnetIds:
-       - !Ref GenkoSubnet1
-       - !Ref GenkoSubnet2
-      Tags: 
+      VpcId: !Ref VpcId
+      AvailabilityZone: !Select [ 0, !GetAZs  '' ]
+      CidrBlock: !Ref DBSubnet1CIDR
+      MapPublicIpOnLaunch: false
+      Tags:
         - Key: Name
           Value: !Sub ${SystemName}-${Env}-DB-Private-Subnet-01
 
-# DbSubnet2
-  DbSubnet2: 
+# DBSubnet2
+  DBSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VpcId
+      AvailabilityZone: !Select [ 0, !GetAZs  '' ]
+      CidrBlock: !Ref DBSubnet2CIDR
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub ${SystemName}-${Env}-DB-Private-Subnet-02
+
+# DBSubnetGroup
+  DBSubnetGroup: 
     Type: AWS::RDS::DBSubnetGroup
     Properties:
-      DBSubnetGroupDescription: DbSubnet
-      DBSubnetGroupName: DbSubnet2
+      DBSubnetGroupDescription: DBSubnetgroup
+      DBSubnetGroupName: DBSubnetgroup
       SubnetIds:
        - !Ref GenkoSubnet1
        - !Ref GenkoSubnet2
       Tags: 
         - Key: Name
-          Value: !Sub ${SystemName}-${Env}-DB-Private-Subnet-02
-
-
-
+          Value: !Sub ${SystemName}-${Env}-DB-Private-Subnetgroup
 
 # PrivateSubnet1
-  GenkoSubnet1:
+  PrivateSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VpcId
@@ -180,7 +173,7 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: !Sub ${SystemName}-${Env}-PrivateSubnet-01
+          Value: !Sub ${SystemName}-${Env}-PrivateSubnet-alb-01
 
 # PrivateSubnet2
   PrivateSubnet2:
@@ -192,7 +185,7 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: !Sub ${SystemName}-${Env}-PrivateSubnet-02
+          Value: !Sub ${SystemName}-${Env}-PrivateSubnet-alb-02
 
 # PrivateSubnet3
   PrivateSubnet3:
@@ -204,7 +197,7 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: !Sub ${SystemName}-${Env}-PrivateSubnet-03
+          Value: !Sub ${SystemName}-${Env}-PrivateSubnet-alb-03
 
 # PrivateSubnet4
   PrivateSubnet4:
@@ -216,7 +209,7 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: !Sub ${SystemName}-${Env}-PrivateSubnet-04
+          Value: !Sub ${SystemName}-${Env}-PrivateSubnet-alb-04
 
 # PrivateSubnet5
   PrivateSubnet5:
@@ -224,34 +217,142 @@ Resources:
     Properties:
       VpcId: !Ref VpcId
       AvailabilityZone: !Select [ 0, !GetAZs  '' ]
-      CidrBlock: !Ref PrivateSubnet45CIDR
+      CidrBlock: !Ref PrivateSubnet5CIDR
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: !Sub ${SystemName}-${Env}-PrivateSubnet-05
+          Value: !Sub ${SystemName}-${Env}-PrivateSubnet-alb-05
 
-#PublicSubnetに紐づけされる
-  PublicRouteTable:
+#------------------------------------------
+#InternetGateway,Route
+#------------------------------------------
+
+# InternetGateway 
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Ref SystemName
+
+  InternetGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref VpcId 
+
+#RouteTable
+  PrivateRouteTable:
     Type: "AWS::EC2::RouteTable"
     Properties:
       VpcId: !Ref VpcId
       Tags:
         - Key: Name
-          Value: !Sub ${SystemName}-${Env}-PublicRouteTable
+          Value: !Sub ${SystemName}-${Env}-PrivateRouteTable
 
-  DefaultPublicRoute:
+#Route
+  PrivateRoute:
     Type: "AWS::EC2::Route"
     DependsOn: InternetGatewayAttachment
     Properties:
-      RouteTableId: !Ref PublicRouteTable
+      RouteTableId: !Ref PrivateRouteTable
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
 
-  PublicSubnet1RouteTableAssociation:
+  GenkoSubnetRouteTableAssoc01:
     Type: "AWS::EC2::SubnetRouteTableAssociation"
     Properties:
-      RouteTableId: !Ref PublicRouteTable
-      SubnetId: !Ref PublicSubnet1
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref GenkoSubnet1
+
+  GenkoSubnetRouteTableAssoc02:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref GenkoSubnet2
+
+  APISubnetRouteTableAssoc01:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref APISubnet1
+
+  APISubnetRouteTableAssoc02:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref APISubnet2
+
+  DBSubnetRouteTableAssoc01:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref DBSubnet1
+
+  DBSubnetRouteTableAssoc02:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref DBSubnet2
+
+  PrivateSubnetRouteTableAssoc01:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref PrivateSubnet1
+
+  PrivateSubnetRouteTableAssoc02:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref PrivateSubnet2
+
+  PrivateSubnetRouteTableAssoc03:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref PrivateSubnet3
+
+  PrivateSubnetRouteTableAssoc04:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref PrivateSubnet4
+
+  PrivateSubnetRouteTableAssoc05:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref PrivateSubnet5
+
+
+#-------------------------------------------------------
+#-------------------------------------------------------
+
+# #S3endpointRoute
+#   Type: AWS::EC2::Route
+#   Properties: 
+#     #CarrierGatewayId: String
+#     DestinationCidrBlock: String
+#     #DestinationIpv6CidrBlock: String
+#     #EgressOnlyInternetGatewayId: String
+#     #GatewayId: String
+#     #InstanceId: String
+#     #LocalGatewayId: String
+#     #NatGatewayId: String
+#     NetworkInterfaceId: String
+#     RouteTableId: String
+#     #TransitGatewayId: String
+#     VpcEndpointId: String
+#     #VpcPeeringConnectionId: String
+
+
+
+
+
+
+
+
 
 #PrivateSubnetに紐づけされる
   # PrivateRouteTable1:
@@ -299,25 +400,29 @@ Resources:
   #     SubnetId: !Ref PrivateSubnet2
 
 Outputs:
-  PublicSubnets:
+  GenkoSubnets:
     Description: A list of the public subnets
-    Value: !Join [ ",", [ !Ref PublicSubnet1, !Ref PublicSubnet2 ]]
+    Value: !Join [ ",", [ !Ref GenkoSubnet1, !Ref GenkoSubnet2 ]]
+
+  APISubnets:
+    Description: A list of the public subnets
+    Value: !Join [ ",", [ !Ref APISubnet1, !Ref APISubnet2 ]]
 
   PrivateSubnets:
     Description: A list of the private subnets
-    Value: !Join [ ",", [ !Ref PrivateSubnet1, !Ref PrivateSubnet2 ]]
+    Value: !Join [ ",", [ !Ref PrivateSubnet1, !Ref PrivateSubnet2, !Ref PrivateSubnet3, !Ref PrivateSubnet4, !Ref PrivateSubnet5 ]]
 
-  PublicSubnet1:
+  GenkoSubnet1:
     Description: A reference to the public subnet in the 1st Availability Zone
-    Value: !Ref PublicSubnet1
+    Value: !Ref GenkoSubnet1
     Export:
-      Name: PublicSubnet1
+      Name: GenkoSubnet1
         
-  PublicSubnet2:
+  GenkoSubnet2:
     Description: A reference to the public subnet in the 2nd Availability Zone
-    Value: !Ref PublicSubnet2
+    Value: !Ref GenkoSubnet2
     Export:
-      Name: PublicSubnet2
+      Name: GenkoSubnet2
 
   PrivateSubnet1:
     Description: A reference to the private subnet in the 1st Availability Zone
