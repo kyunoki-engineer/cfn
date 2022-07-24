@@ -1,4 +1,4 @@
-Description: References to created IGW, NatGW, AZ, Subnet, 
+Description: Template to create IGW, AZ, Subnet, Route, RouteTable.
 
 AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
