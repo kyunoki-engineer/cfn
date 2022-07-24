@@ -259,6 +259,9 @@ Resources:
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
 
+##-----------------------------------------------
+#SubnetsAssociation 
+##-----------------------------------------------
   GenkoSubnetRouteTableAssoc01:
     Type: "AWS::EC2::SubnetRouteTableAssociation"
     Properties:
@@ -329,76 +332,6 @@ Resources:
 #-------------------------------------------------------
 #-------------------------------------------------------
 
-# #S3endpointRoute
-#   Type: AWS::EC2::Route
-#   Properties: 
-#     #CarrierGatewayId: String
-#     DestinationCidrBlock: String
-#     #DestinationIpv6CidrBlock: String
-#     #EgressOnlyInternetGatewayId: String
-#     #GatewayId: String
-#     #InstanceId: String
-#     #LocalGatewayId: String
-#     #NatGatewayId: String
-#     NetworkInterfaceId: String
-#     RouteTableId: String
-#     #TransitGatewayId: String
-#     VpcEndpointId: String
-#     #VpcPeeringConnectionId: String
-
-
-
-
-
-
-
-
-
-#PrivateSubnetに紐づけされる
-  # PrivateRouteTable1:
-  #   Type: AWS::EC2::RouteTable
-  #   Properties:
-  #     VpcId: !Ref VpcId
-  #     Tags:
-  #       - Key: Name
-  #         Value: !Sub ${Env} Private Routes (AZ1)
-
-  # DefaultPrivateRoute1:
-  #   Type: AWS::EC2::Route
-  #   Properties:
-  #     RouteTableId: !Ref PrivateRouteTable1
-  #     DestinationCidrBlock: 0.0.0.0/0
-  #     # NatGatewayId: !Ref NatGateway1
-  #     GatewayId: !Ref InternetGateway
-
-  # PrivateSubnet1RouteTableAssociation:
-  #   Type: AWS::EC2::SubnetRouteTableAssociation
-  #   Properties:
-  #     RouteTableId: !Ref PrivateRouteTable1
-  #     SubnetId: !Ref PrivateSubnet1
-
-  # PrivateRouteTable2:
-  #   Type: AWS::EC2::RouteTable
-  #   Properties:
-  #     VpcId: !Ref VpcId
-  #     Tags:
-  #       - Key: Name
-  #         Value: !Sub ${Env} Private Routes (AZ2)
-
-  # DefaultPrivateRoute2:
-  #   Type: AWS::EC2::Route
-  #   Properties:
-  #     RouteTableId: !Ref PrivateRouteTable2
-  #     DestinationCidrBlock: 0.0.0.0/0
-  #     # NatGatewayId: !Ref NatGateway2
-  #     GatewayId: !Ref InternetGateway
-
-  # PrivateSubnet2RouteTableAssociation:
-  #   Type: AWS::EC2::SubnetRouteTableAssociation
-  #   Properties:
-  #     RouteTableId: !Ref PrivateRouteTable2
-  #     SubnetId: !Ref PrivateSubnet2
-
 Outputs:
   GenkoSubnets:
     Description: A list of the public subnets
@@ -413,28 +346,70 @@ Outputs:
     Value: !Join [ ",", [ !Ref PrivateSubnet1, !Ref PrivateSubnet2, !Ref PrivateSubnet3, !Ref PrivateSubnet4, !Ref PrivateSubnet5 ]]
 
   GenkoSubnet1:
-    Description: A reference to the public subnet in the 1st Availability Zone
+    Description: Output of Genko subnet 1
     Value: !Ref GenkoSubnet1
     Export:
       Name: GenkoSubnet1
         
   GenkoSubnet2:
-    Description: A reference to the public subnet in the 2nd Availability Zone
+    Description: Output of Genko subnet 2
     Value: !Ref GenkoSubnet2
     Export:
       Name: GenkoSubnet2
 
+  APISubnet1:
+    Description: Output of API subnet 1
+    Value: !Ref APISubnet1
+    Export:
+      Name: APISubnet1
+
+  APISubnet2:
+    Description: Output of API subnet 2
+    Value: !Ref APISubnet2
+    Export:
+      Name: APISubnet2
+
+  DBSubnet1:
+    Description: Output of DB subnet 1
+    Value: !Ref DBSubnet1
+    Export:
+      Name: DBSubnet1
+
+  DBSubnet2:
+    Description: Output of DB subnet 2
+    Value: !Ref DBSubnet2
+    Export:
+      Name: DBSubnet2
+
   PrivateSubnet1:
-    Description: A reference to the private subnet in the 1st Availability Zone
+    Description: Output of Private subnet 1
     Value: !Ref PrivateSubnet1
     Export:
       Name: PrivateSubnet1
 
   PrivateSubnet2:
-    Description: A reference to the private subnet in the 2nd Availability Zone
+    Description: Output of Private subnet 2
     Value: !Ref PrivateSubnet2
     Export:
       Name: PrivateSubnet2
+
+  PrivateSubnet3:
+    Description: Output of Private subnet 3
+    Value: !Ref PrivateSubnet3
+    Export:
+      Name: PrivateSubnet3
+
+  PrivateSubnet4:
+    Description: Output of Private subnet 4
+    Value: !Ref PrivateSubnet4
+    Export:
+      Name: PrivateSubnet4
+
+  PrivateSubnet5:
+    Description: Output of Private subnet 5
+    Value: !Ref PrivateSubnet5
+    Export:
+      Name: PrivateSubnet5
 
   DBSubnetGroup:
     Description: Subnet for DB
