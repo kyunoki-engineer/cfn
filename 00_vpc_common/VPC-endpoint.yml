@@ -27,6 +27,11 @@ Parameters:
     Type: AWS::SSM::Parameter::Value<String>
     Default: sample-DEV-ps-routetableid-private
 
+  SubnetIds:
+    Description: Select SubnetIDs from for using VPC Endpoints from SSM Parameter Store.
+    Type: AWS::SSM::Parameter::Value<List<String>>
+    Default: sample-DEV-ps-subnetids-api
+
 Resources:
 #S3endpoint
   S3Endpoint:
@@ -60,7 +65,7 @@ Resources:
   CwlogEndpoint:
     Type: AWS::EC2::VPCEndpoint
     Properties: 
-      ServiceName: !Sub 'com.amazonaws.${AWS::Region}logs'
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.logs'
       SubnetIds: !Ref SubnetIds
       VpcId: !Ref VpcId
       VpcEndpointType: Interface
@@ -90,7 +95,7 @@ Resources:
   EcrdkrEndpoint:
     Type: AWS::EC2::VPCEndpoint
     Properties: 
-      ServiceName: !Sub 'com.amazonaws.${AWS::Region}ecr.dkr'
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.ecr.dkr'
       SubnetIds: !Ref SubnetIds
       VpcId: !Ref VpcId
       VpcEndpointType: Interface
@@ -120,7 +125,7 @@ Resources:
   EcrapiEndpoint:
     Type: AWS::EC2::VPCEndpoint
     Properties: 
-      ServiceName: !Sub 'com.amazonaws.${AWS::Region}ecr.api'
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.ecr.api'
       SubnetIds: !Ref SubnetIds
       VpcId: !Ref VpcId
       VpcEndpointType: Interface
@@ -150,7 +155,7 @@ Resources:
   SsmEndpoint:
     Type: AWS::EC2::VPCEndpoint
     Properties: 
-      ServiceName: !Sub 'com.amazonaws.${AWS::Region}ssm'
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.ssm'
       SubnetIds: !Ref SubnetIds
       VpcId: !Ref VpcId
       VpcEndpointType: Interface
@@ -180,16 +185,16 @@ Resources:
   Ec2messagesEndpoint:
     Type: AWS::EC2::VPCEndpoint
     Properties: 
-      ServiceName: !Sub 'com.amazonaws.${AWS::Region}ec2messages'
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.ec2messages'
       SubnetIds: !Ref SubnetIds
       VpcId: !Ref VpcId
       VpcEndpointType: Interface
       SecurityGroupIds: 
-        - !Ref Ec2messagespointSecurityGroup
+        - !Ref Ec2messagesEndpointSecurityGroup
       PrivateDnsEnabled: true
 
 #SsmmessagesEndpoint
-  SsmEndpointSecurityGroup:
+  SsmmessagesEndpointSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties: 
       GroupName: !Sub SG-${SystemName}-${Env}-endpoint-ssmmessages
@@ -210,12 +215,12 @@ Resources:
   SsmmessagesEndpoint:
     Type: AWS::EC2::VPCEndpoint
     Properties: 
-      ServiceName: !Sub 'com.amazonaws.${AWS::Region}ssmmessages'
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.ssmmessages'
       SubnetIds: !Ref SubnetIds
       VpcId: !Ref VpcId
       VpcEndpointType: Interface
       SecurityGroupIds: 
-        - !Ref SsmmessagesEndpointSecurityGroup
+        - !Ref SsmmessagesEndpointSecurityGroup 
       PrivateDnsEnabled: true
 
 #CodedeployEndpoint
@@ -240,7 +245,7 @@ Resources:
   CodedeployEndpoint:
     Type: AWS::EC2::VPCEndpoint
     Properties: 
-      ServiceName: !Sub 'com.amazonaws.${AWS::Region}codedeploy'
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.codedeploy'
       SubnetIds: !Ref SubnetIds
       VpcId: !Ref VpcId
       VpcEndpointType: Interface
@@ -270,7 +275,7 @@ Resources:
   CodedeployCSEndpoint:
     Type: AWS::EC2::VPCEndpoint
     Properties: 
-      ServiceName: !Sub 'com.amazonaws.${AWS::Region}codedeploy-commands-secure'
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.codedeploy-commands-secure'
       SubnetIds: !Ref SubnetIds
       VpcId: !Ref VpcId
       VpcEndpointType: Interface
@@ -300,11 +305,11 @@ Resources:
   SnsEndpoint:
     Type: AWS::EC2::VPCEndpoint
     Properties: 
-      ServiceName: !Sub 'com.amazonaws.${AWS::Region}sns'
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.sns'
       SubnetIds: !Ref SubnetIds
       VpcId: !Ref VpcId
       VpcEndpointType: Interface
       SecurityGroupIds: 
-        - !Ref CodedeployCSEndpointSecurityGroup
+        - !Ref SnsEndpointSecurityGroup
       PrivateDnsEnabled: true
 
