@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create ECR
+
+Parameters:
+  SystemName:
+    Description: Enter SystemName
+    Type: String
+    Default: sample
+
+  Env:
+    Description: hon, dev
+    Type: String
+    Default: dev
+
+Resources: 
+  ECRRepository:  
+    Type: AWS::ECR::Repository
+    Properties: 
+      RepositoryName: !Sub ${SystemName}-${Env}-ecr-repo
+      Tags: 
+        - Key  : Name
+          Value: !Sub ${SystemName}-${Env}-ecr-repo
+          

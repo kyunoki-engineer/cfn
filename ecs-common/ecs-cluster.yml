@@ -1,0 +1,30 @@
+Description: Template for creating an ECS cluster.
+
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  SystemName:
+    Description: Enter SystemName
+    Type: String
+    Default: sample
+
+  Env:
+    Description: HON, DEV
+    Type: String
+    Default: DEV
+
+
+Resources:  
+  GenkoEcsCluster:
+    Type: AWS::ECS::Cluster
+    Properties: 
+      CapacityProviders: 
+        - FARGATE
+      ClusterName: GenkoEcsCluster
+      ClusterSettings: 
+        - Name : containerInsights 
+          Value: enabled
+      Tags: 
+        - Key  : Name
+          Value: !Sub ${SystemName}-${Env}-ecs-cluster
+
+  
