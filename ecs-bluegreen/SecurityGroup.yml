@@ -28,3 +28,9 @@ Resources:
           - Key: Name
             Value: !Sub ${SystemName}-${Env}-ELBIngressGroup
 
+Outputs:
+  ELBIngressGroup:
+    Description: The security group ID to use for public web servers
+    Value: !Ref ELBIngressGroup
+    Export:
+      Name: ELBIngressGroup

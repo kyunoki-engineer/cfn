@@ -1,0 +1,14 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create ecsTaskExecutionRole.
+
+Parameters:
+  SystemName:
+    Description: Enter SystemName
+    Type: String
+    Default: sample
+
+  Env:
+    Description: HON, DEV
+    Type: String
+    Default: DEV
+
