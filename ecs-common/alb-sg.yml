@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create ecsTaskExecutionRole.
+
+Parameters:
+  SystemName:
+    Description: Enter SystemName
+    Type: String
+    Default: sample
+
+  Env:
+    Description: HON, DEV
+    Type: String
+    Default: DEV
+
+Resources:
+# ELBIngressGroup
+  ELBIngressGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: ELBingressgroup
+      GroupName: !Sub ${SystemName}-${Env}-ELBIngressGroup
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+      Tags:
+          - Key: Name
+            Value: !Sub ${SystemName}-${Env}-ELBIngressGroup
+
