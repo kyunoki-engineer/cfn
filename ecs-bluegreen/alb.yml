@@ -18,23 +18,61 @@ Parameters:
     Default: sample-DEV-ps-vpcid
 
 Resources:
-#  TargetGroup
-  sampleTargetGroup:
+#  TargetGroup01
+  sampleTargetGroup01:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties: 
       VpcId: !Ref VpcId
-      Name: sampleTargetGroup
+      Name: Sub! ${SystemName}-TargetGroup01
       Protocol: HTTP
       Port: 80
-      HealthCheckProtocol: HTTP
-      HealthCheckPath: "/"
-      HealthCheckPort: "traffic-port"
-      HealthyThresholdCount: 2
-      UnhealthyThresholdCount: 2
-      HealthCheckTimeoutSeconds: 5
-      HealthCheckIntervalSeconds: 10
-      Matcher: 
-        HttpCode: 200
+      TargetType: ip
+      
+#  TargetGroup01
+  sampleTargetGroup02:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties: 
+      VpcId: !Ref VpcId
+      Name: Sub! ${SystemName}-TargetGroup02
+      Protocol: HTTP
+      Port: 80
+      TargetType: ip
+
+# ALB 
+  sampleALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: Sub! ${SystemName}-ALB
+      Tags:
+        - Key: Name
+          Value: Sub! ${SystemName}-ALB
+      Scheme: "internet-facing"
+      LoadBalancerAttributes:
+        - Key: "deletion_protection.enabled"
+          Value: false
+        - Key: "idle_timeout.timeout_seconds"
+          Value: 60
+        - Key: "access_logs.s3.enabled"
+          Value: true
+        - Key: "access_logs.s3.bucket"
+          Value: !Sub "alb-log-${AWS::AccountId}"
+
+      SecurityGroups:
+      - !ImportValue ELBIngressGroup
+      Subnets: 
+      - !ImportValue PublicSubnet1
+      - !ImportValue PublicSubnet2
+
+
+      # HealthCheckProtocol: HTTP
+      # HealthCheckPath: "/"
+      # HealthCheckPort: "traffic-port"
+      # HealthyThresholdCount: 2
+      # UnhealthyThresholdCount: 2
+      # HealthCheckTimeoutSeconds: 5
+      # HealthCheckIntervalSeconds: 10
+      # Matcher: 
+      #   HttpCode: 200
       Tags: 
         - Key: Name
           Value: sampleTargetGroup
