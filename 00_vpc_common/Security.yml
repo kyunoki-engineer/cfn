@@ -94,20 +94,20 @@ Resources:
           ToPort : 443
           CidrIp: 0.0.0.0/0
 
-# # ELBIngressGroup
-#   ELBIngressGroup:
-#     Type: AWS::EC2::SecurityGroup
-#     Properties:
-#       GroupDescription: ELBingressgroup
-#       GroupName: !Sub ${SystemName}-${Env}-ELBIngressGroup
-#       VpcId: !Ref VpcId
-#       SecurityGroupIngress:
-#         - IpProtocol: tcp
-#           FromPort: 80
-#           ToPort: 80
-#       Tags:
-#           - Key: Name
-#             Value: !Sub ${SystemName}-${Env}-ELBIngressGroup
+# ELBIngressGroup
+  ELBIngressGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: ELBingressgroup
+      GroupName: !Sub ${SystemName}-${Env}-ELBIngressGroup
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+      Tags:
+          - Key: Name
+            Value: !Sub ${SystemName}-${Env}-ELBIngressGroup
 
 # DBSecurityGroup01
   DBSecurityGroup01:
@@ -137,11 +137,11 @@ Outputs:
     Export:
       Name: EC2SecurityGroup02
 
-  # ELBIngressGroup:
-  #   Description: The security group ID to use for public web servers
-  #   Value: !Ref ELBIngressGroup
-  #   Export:
-  #     Name: ELBIngressGroup
+  ELBIngressGroup:
+    Description: The security group ID to use for public web servers
+    Value: !Ref ELBIngressGroup
+    Export:
+      Name: ELBIngressGroup
 
   DBSecurityGroup01:
     Description: The security group ID to use for public web servers
