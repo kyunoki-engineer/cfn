@@ -17,6 +17,11 @@ Parameters:
     Type: AWS::SSM::Parameter::Value<String>
     Default: sample-DEV-ps-vpcid
 
+  GenkoSubnetids: 
+    Description: Create a genko subnetids for the VPC in the SSM Parameter Store.
+    Type: AWS::SSM::Parameter::Value<List<String>>
+    Default: sample-DEV-ps-subnetids-genko
+
 Resources:
 #  TargetGroup01
   sampleTargetGroup01:
@@ -28,14 +33,14 @@ Resources:
       Port: 80
       TargetType: ip
       
-#  TargetGroup01
+#  TargetGroup02
   sampleTargetGroup02:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties: 
       VpcId: !Ref VpcId
       Name: Sub! ${SystemName}-TargetGroup02
       Protocol: HTTP
-      Port: 80
+      Port: 8080
       TargetType: ip
 
 # ALB 
@@ -56,68 +61,51 @@ Resources:
           Value: true
         - Key: "access_logs.s3.bucket"
           Value: !Sub "alb-log-${AWS::AccountId}"
-
+        - Key: access_logs.s3.prefix
+          Value: "dev"
       SecurityGroups:
       - !ImportValue ELBIngressGroup
       Subnets: 
-      - !ImportValue PublicSubnet1
-      - !ImportValue PublicSubnet2
+      - !Ref GenkoSubnetids
 
+      # Tags: 
+      #   - Key: Name
+      #     Value: sampleTargetGroup
 
-      # HealthCheckProtocol: HTTP
-      # HealthCheckPath: "/"
-      # HealthCheckPort: "traffic-port"
-      # HealthyThresholdCount: 2
-      # UnhealthyThresholdCount: 2
-      # HealthCheckTimeoutSeconds: 5
-      # HealthCheckIntervalSeconds: 10
-      # Matcher: 
-      #   HttpCode: 200
-      Tags: 
-        - Key: Name
-          Value: sampleTargetGroup
-      TargetGroupAttributes: 
-        - Key: "deregistration_delay.timeout_seconds"
-          Value: 300
-        - Key: "stickiness.enabled"
-          Value: false
-        - Key: "stickiness.type"
-          Value: lb_cookie
-        - Key: "stickiness.lb_cookie.duration_seconds"
-          Value: 86400
-      Targets: 
-        - Id: !ImportValue Rubyweb1
-          Port: 80
-        - Id: !ImportValue Rubyweb2
-          Port: 80
+      # TargetGroupAttributes: 
+      #   - Key: "deregistration_delay.timeout_seconds"
+      #     Value: 300
+      #   - Key: "stickiness.enabled"
+      #     Value: false
+      #   - Key: "stickiness.type"
+      #     Value: lb_cookie
+      #   - Key: "stickiness.lb_cookie.duration_seconds"
+      #     Value: 86400
 
-# ALB 
-  sampleALB:
-    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
-    Properties:
-      Name: sampleALB
-      Tags:
-        - Key: Name
-          Value: sampleALB
-      Scheme: "internet-facing"
-      LoadBalancerAttributes:
-        - Key: "deletion_protection.enabled"
-          Value: false
-        - Key: "idle_timeout.timeout_seconds"
-          Value: 60
-      SecurityGroups:
-      - !ImportValue ELBIngressGroup
-      Subnets: 
-      - !ImportValue PublicSubnet1
-      - !ImportValue PublicSubnet2
+      # Targets: 
+      #   - Id: !ImportValue Rubyweb1
+      #     Port: 80
+      #   - Id: !ImportValue Rubyweb2
+      #     Port: 80
 
 # albListener 
-  sampleALBListener:
+  sampleALBListener1:
     Type: "AWS::ElasticLoadBalancingV2::Listener"
     Properties: 
       DefaultActions: 
-        - TargetGroupArn: !Ref sampleTargetGroup
+        - TargetGroupArn: !Ref sampleTargetGroup01
           Type: forward
       LoadBalancerArn: !Ref sampleALB
       Port: 80
+      Protocol: HTTP
+
+# albListener
+  sampleALBListener2:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties: 
+      DefaultActions: 
+        - TargetGroupArn: !Ref sampleTargetGroup02
+          Type: forward
+      LoadBalancerArn: !Ref sampleALB
+      Port: 8080
       Protocol: HTTP
