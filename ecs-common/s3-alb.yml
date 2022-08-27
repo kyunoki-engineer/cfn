@@ -31,8 +31,6 @@ Resources:
       UnhealthyThresholdCount: 5
       VpcId: !Ref Vpc
 
-
-
   lbTargetGroupGreen:
     Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
     Properties:
@@ -49,8 +47,6 @@ Resources:
       TargetType: ip
       UnhealthyThresholdCount: 5
       VpcId: !Ref Vpc
-
-
 
   loadBalancer:
     Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
@@ -98,8 +94,3 @@ Resources:
       LoadBalancerArn: !Ref loadBalancer
       Port: 8080
       Protocol: HTTP
-
-#S3バケット
-
-
-
