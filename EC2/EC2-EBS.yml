@@ -12,7 +12,7 @@ Parameters:
     Type: String
     Default: sample
 
-  # EC2のキーペアの名前を定義し、スタック作成時にコンソールで指定する
+  ## EC2のキーペアの名前を定義し、スタック作成時にコンソールで指定を行なう。
   KeyName:
     Type: "AWS::EC2::KeyPair::KeyName"
     Default: "sample-DEV"
