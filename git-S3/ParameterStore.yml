@@ -70,14 +70,14 @@ Resources:
 
 
 
-  # Ec2Image:
-  #   Type: AWS::SSM::Parameter
-  #   Properties: 
-  #     Name: !Sub ${SystemName}-${Env}-ec2-ImageId
-  #     Description: Create EC2 image in SSM Parameter Store.
-  #     Type: String
-  #     DataType: aws:ec2:image
-  #     Value: ami-0b7546e839d7ace12
+  Ec2Image:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: !Sub ${SystemName}-${Env}-ec2-ImageId
+      Description: Create EC2 image in SSM Parameter Store.
+      Type: String
+      DataType: aws:ec2:image
+      Value: ami-0b7546e839d7ace12
 
 
 

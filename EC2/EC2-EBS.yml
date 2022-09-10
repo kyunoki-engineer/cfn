@@ -21,9 +21,12 @@ Parameters:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: sample-DEV-ec2-ImageId
 
+
+  
+
 Resources:
 #EC2
-  Rubyweb1:
+  jumpserver:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: !Ref ImageId
@@ -33,7 +36,7 @@ Resources:
       NetworkInterfaces:
         - AssociatePublicIpAddress: "true"
           DeviceIndex: "0"
-          SubnetId: !ImportValue PublicSubnet1
+          SubnetId: !ImportValue GenkoSubnet1
           GroupSet:
            - !ImportValue EC2SecurityGroup01
       # SubnetId: !ImportValue PublicSubnet1
@@ -41,47 +44,47 @@ Resources:
       #   - !ImportValue EC2SecurityGroup01
       Tags:
           - Key: Name
-            Value: sample-ec2-Rubyweb1
+            Value: sample-ec2-jumpserver
 # ebs
       BlockDeviceMappings:
       - DeviceName: /dev/xvda
         Ebs:
           VolumeSize: 8
 
-  Rubyweb2:
-    Type: AWS::EC2::Instance
-    Properties:
-      ImageId: !Ref ImageId
-      AvailabilityZone: "ap-northeast-1c"
-      InstanceType: t2.micro
-      KeyName: !Ref KeyName
-      NetworkInterfaces:
-        - AssociatePublicIpAddress: "true"
-          DeviceIndex: "0"
-          SubnetId: !ImportValue PublicSubnet2
-          GroupSet:
-           - !ImportValue EC2SecurityGroup02
-      # SubnetId: !ImportValue PublicSubnet2
-      # SecurityGroupIds:
-      #   - !ImportValue EC2SecurityGroup02
-      Tags:
-          - Key: Name
-            Value: sample-ec2-Rubyweb2
-# ebs
-      BlockDeviceMappings:
-      - DeviceName: /dev/xvda
-        Ebs:
-          VolumeSize: 8
+#   Rubyweb2:
+#     Type: AWS::EC2::Instance
+#     Properties:
+#       ImageId: !Ref ImageId
+#       AvailabilityZone: "ap-northeast-1c"
+#       InstanceType: t2.micro
+#       KeyName: !Ref KeyName
+#       NetworkInterfaces:
+#         - AssociatePublicIpAddress: "true"
+#           DeviceIndex: "0"
+#           SubnetId: !ImportValue PublicSubnet2
+#           GroupSet:
+#            - !ImportValue EC2SecurityGroup02
+#       # SubnetId: !ImportValue PublicSubnet2
+#       # SecurityGroupIds:
+#       #   - !ImportValue EC2SecurityGroup02
+#       Tags:
+#           - Key: Name
+#             Value: sample-ec2-Rubyweb2
+# # ebs
+#       BlockDeviceMappings:
+#       - DeviceName: /dev/xvda
+#         Ebs:
+#           VolumeSize: 8
 
 Outputs:
-  Rubyweb1:
-    Description: Rubyweb1
-    Value: !Ref Rubyweb1
+  jumpserver:
+    Description: jumpserver
+    Value: !Ref jumpserver
     Export:
-      Name: Rubyweb1
+      Name: jumpserver
 
-  Rubyweb2:
-    Description: Rubyweb2
-    Value: !Ref Rubyweb2
-    Export:
-      Name: Rubyweb2
+  # Rubyweb2:
+  #   Description: Rubyweb2
+  #   Value: !Ref Rubyweb2
+  #   Export:
+  #     Name: Rubyweb2
