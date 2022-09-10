@@ -9,10 +9,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: pixta-dev/repository-main-action@v1
+      - uses: kyunoki-engineer/cfn@v1
         with:
           target_repo_url:
-            ssh://git-codecommit.~~~~（**codecommitのミラーリング先リポジトリSSHリンク）**
+            ssh://git-codecommit.ap-northeast-1.amazonaws.com/v1/repos/cfn
           ssh_private_key:
             ${{ secrets.CODECOMMIT_SSH_PRIVATE_KEY }}
           ssh_username:
