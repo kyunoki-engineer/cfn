@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: kyunoki-engineer/cfn@v1
+      - uses: kyunoki-engineer/cfn
         with:
           target_repo_url:
             ssh://git-codecommit.ap-northeast-1.amazonaws.com/v1/repos/cfn
