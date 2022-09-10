@@ -3,9 +3,9 @@ Description: References to created ELB
 
 Parameters:
   Env:
-    Description: HON, DEV
+    Description: hon, dev
     Type: String
-    Default: DEV
+    Default: dev
 
   SystemName:
     Description: Enter SystemName
@@ -23,12 +23,23 @@ Parameters:
     Default: sample-DEV-ps-subnetids-genko
 
 Resources:
+# ALBS3Bucket
+  albs3bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${SystemName}-${Env}-alb-log
+
+
+
+
+      
+
 #  TargetGroup01
   sampleTargetGroup01:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties: 
       VpcId: !Ref VpcId
-      Name: Sub! ${SystemName}-TargetGroup01
+      Name: sample-TargetGroup01
       Protocol: HTTP
       Port: 80
       TargetType: ip
@@ -38,7 +49,7 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties: 
       VpcId: !Ref VpcId
-      Name: Sub! ${SystemName}-TargetGroup02
+      Name: sample-TargetGroup02
       Protocol: HTTP
       Port: 8080
       TargetType: ip
@@ -47,10 +58,10 @@ Resources:
   sampleALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Name: Sub! ${SystemName}-ALB
+      Name: sample-dev-ALB
       Tags:
         - Key: Name
-          Value: Sub! ${SystemName}-ALB
+          Value: sample-ALB
       Scheme: "internet-facing"
       LoadBalancerAttributes:
         - Key: "deletion_protection.enabled"
@@ -60,13 +71,12 @@ Resources:
         - Key: "access_logs.s3.enabled"
           Value: true
         - Key: "access_logs.s3.bucket"
-          Value: !Sub "alb-log-${AWS::AccountId}"
+          Value: !Sub "albs3bucket"
         - Key: access_logs.s3.prefix
           Value: "dev"
       SecurityGroups:
       - !ImportValue ELBIngressGroup
-      Subnets: 
-      - !Ref GenkoSubnetids
+      Subnets: !Ref GenkoSubnetids
 
       # Tags: 
       #   - Key: Name
@@ -109,3 +119,6 @@ Resources:
       LoadBalancerArn: !Ref sampleALB
       Port: 8080
       Protocol: HTTP
+
+S3Bucket: albs3bucket は ELB と同じリージョンに配置されていません。
+app/sample-dev-ALB/be2d06f1defaff34 （Service: AmazonElasticLoadBalancing; Status Code: 400; Error Code: InvalidConfigurationRequest; Request ID: 7501ed1c-9776-43bf-8180-c54111089f25; Proxy: null)

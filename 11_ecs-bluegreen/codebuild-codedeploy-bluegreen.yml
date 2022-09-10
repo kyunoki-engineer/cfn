@@ -1,0 +1,108 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create CodeDeploy DeploymentGroup
+
+Parameters:
+  SystemName:
+    Description: Enter SystemName
+    Type: String
+    Default: sample
+
+  Env:
+    Description: HON, DEV
+    Type: String
+    Default: DEV
+
+  VpcId:
+    Description: Select VPCID from SSM Prameter Store.
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: sample-DEV-ps-vpcid
+
+Resources:
+#CodeDeployApplication
+  CodeDeployApplication:
+    Type: AWS::CodeDeploy::Application
+    Properties: 
+      ApplicationName: !Sub ${SystemName}-${Env}-codedeploy-application
+      ComputePlatform: ECS
+      Tags: 
+        - Key: Name
+          Value: !Sub ${SystemName}-${Env}-codedeploy-application
+
+
+
+
+
+#CodeDeployDeploymentGroup
+  CodeDeployDeploymentGroup:
+    Type: AWS::CodeDeploy::DeploymentGroup
+    Properties: 
+      # AlarmConfiguration: 
+      #   AlarmConfiguration CloudWatch アラーム
+      ApplicationName: ecs-form
+      # AutoRollbackConfiguration: 
+      #   AutoRollbackConfiguration
+      # AutoScalingGroups: 
+      #   - String
+      BlueGreenDeploymentConfiguration: 
+        DeploymentReadyOption: 
+          ActionOnTimeout: CONTINUE_DEPLOYMENT
+          # WaitTimeInMinutes: 10
+
+          # GreenFleetProvisioningOption: 
+          #   GreenFleetProvisioningOption
+          # TerminateBlueInstancesOnDeploymentSuccess: 
+          #   BlueInstanceTerminationOption
+
+      # Deployment: 
+      #   Deployment
+      # DeploymentConfigName: String
+      DeploymentGroupName: ECSFormDeploymentGroup
+      DeploymentStyle: 
+        DeploymentStyle
+      # Ec2TagFilters: 
+      #   - EC2TagFilter
+      # Ec2TagSet: 
+      #   EC2TagSet
+      ECSServices: 
+        - ECSService
+      LoadBalancerInfo: 
+        LoadBalancerInfo
+      OnPremisesInstanceTagFilters: 
+        - TagFilter
+      OnPremisesTagSet: 
+        OnPremisesTagSet
+      OutdatedInstancesStrategy: String
+      ServiceRoleArn: String
+      Tags: 
+        - Tag
+      TriggerConfigurations: 
+        - TriggerConfig
+
+
+
+        ######
+        ECR 作成
+        ECSクラスター
+        
+        SG ALBとECSタスク
+        S3バケットログ用
+        S3バケットCodecommit連携用
+
+        CodeDeploy
+          IAMロールの作成
+          Deployグループ作成
+          Application作成
+
+        CodePipelineの作成
+          IAMロールの作成
+          S3バケットの紐づけ
+          CodeCommitとの紐づけ
+          パラメータストアの紐づけ
+        
+        ECS Fargate
+          ALB リスナー×2、ターゲットグループ×2
+          ECSService ×2、
+          ######
+
+
+
