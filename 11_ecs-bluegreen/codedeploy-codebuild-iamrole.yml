@@ -32,9 +32,3 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AWSCodeDeployRoleForECS
 
-<<<<<<< HEAD
-        
-=======
-
-        # CodeBuild
->>>>>>> 9abaf810c2fae769ae6864d200caa19c674c2a6c
