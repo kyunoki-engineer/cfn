@@ -12,12 +12,6 @@ Parameters:
     Type: String
     Default: DEV
 
-  VpcId:
-    Description: Select VPCID from SSM Prameter Store.
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: sample-DEV-ps-vpcid
-
-
 Resources:
   #  BlueGreen CodeDeploy Role
   CodeDeployRole:
