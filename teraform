@@ -1,0 +1,45 @@
+Resource Syntax
+
+
+resource "aws_instnace" "web" {
+ ami        "ami-alb2c3d4"
+ instance_type = "t2.micro"
+}
+
+resource "aws_instnace" "app" {
+ ami        "ami-alb2c3d4"
+ instance_type = "t2.micro"
+}
+
+
+variable "aws_region" {
+  default = "ap-northeast-1"
+}
+
+variable "aws_region" {
+  default = "ap-northeast-1"
+}
+ 
+ 
+
+resource "aws_instnace" "create_ec2" {
+    name = "test"
+    type = "t2.micro"
+}
+
+output =instace_ip {
+  value aws
+}
+
+
+$ teraform init
+$ teraform plan (予定)実行すると、リソース作成できる。
+
+
+
+米国シリコンバレーDevOps監修！超Teraform完全入門（0.14）+
+
+
+
+
+CLI には　インストール、Config、シークレットキー、
