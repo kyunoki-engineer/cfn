@@ -31,4 +31,7 @@ Resources:
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AWSCodeDeployRoleForECS
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9709d6de40cdf62f2d5b5388f6f9605a652d2dff
