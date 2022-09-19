@@ -1,0 +1,29 @@
+# ------------------------------------------------------------#
+#  ECS TaskDefinition
+# ------------------------------------------------------------#
+ECSTaskDefinition:
+  Type: 'AWS::ECS::TaskDefinition'
+  Properties:
+    Cpu: !Ref ECSTaskCPUUnit
+    ExecutionRoleArn: !GetAtt ECSTaskExecutionRole.Arn
+    Family: !Sub '${ProjectName}-${ECSTaskName}'
+    Memory: !Ref ECSTaskMemory
+    NetworkMode: awsvpc
+    RequiresCompatibilities:
+      - FARGATE
+
+    #ContainerDefinitions
+    ContainerDefinitions:
+      - Name: !Sub '${ProjectName}-${ECSContainerName}'
+        Image: !Ref ECSImageName
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group: !Ref ECSLogGroup
+            awslogs-region: !Ref 'AWS::Region'
+            awslogs-stream-prefix: !Ref ProjectName
+        MemoryReservation: 128
+        PortMappings:
+          - HostPort: 80
+            Protocol: tcp
+            ContainerPort: 80
