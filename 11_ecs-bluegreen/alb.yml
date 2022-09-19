@@ -108,7 +108,7 @@ Resources:
       LoadBalancerArn: !Ref sampleALB
       Port: 80
       Protocol: HTTP
-      
+
 ##--------------------------------
 # albListener
   sampleALBListener2:
@@ -121,5 +121,5 @@ Resources:
       Port: 8080
       Protocol: HTTP
 
-S3Bucket: albs3bucket は ELB と同じリージョンに配置されていません。
-app/sample-dev-ALB/be2d06f1defaff34 （Service: AmazonElasticLoadBalancing; Status Code: 400; Error Code: InvalidConfigurationRequest; Request ID: 7501ed1c-9776-43bf-8180-c54111089f25; Proxy: null)
+# S3Bucket: albs3bucket は ELB と同じリージョンに配置されていません。
+# app/sample-dev-ALB/be2d06f1defaff34 （Service: AmazonElasticLoadBalancing; Status Code: 400; Error Code: InvalidConfigurationRequest; Request ID: 7501ed1c-9776-43bf-8180-c54111089f25; Proxy: null)
