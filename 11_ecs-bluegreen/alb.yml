@@ -23,11 +23,11 @@ Parameters:
     Default: sample-DEV-ps-subnetids-genko
 
 Resources:
-# ALBS3Bucket
-  albs3bucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: !Sub ${SystemName}-${Env}-alb-log
+# # ALBS3Bucket
+#   albs3bucket:
+#     Type: AWS::S3::Bucket
+#     Properties:
+#       BucketName: !Sub ${SystemName}-${Env}-alb-log
 
 
 
@@ -67,12 +67,12 @@ Resources:
           Value: false
         - Key: "idle_timeout.timeout_seconds"
           Value: 60
-        - Key: "access_logs.s3.enabled"
-          Value: true
-        - Key: "access_logs.s3.bucket"
-          Value: !Sub "albs3bucket"
-        - Key: access_logs.s3.prefix
-          Value: "dev"
+        # - Key: "access_logs.s3.enabled"
+        #   Value: true
+        # - Key: "access_logs.s3.bucket"
+        #   Value: !Sub "albs3bucket"
+        # - Key: access_logs.s3.prefix
+        #   Value: "dev"
       SecurityGroups:
       - !ImportValue ELBIngressGroup
       Subnets: !Ref GenkoSubnetids
