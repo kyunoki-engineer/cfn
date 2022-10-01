@@ -45,11 +45,11 @@ Resources:
       RequiresCompatibilities:
         - FARGATE
 
-    ContainerDefinitions:
-      - Name: !Sub ${SystemName}-ECSContainer
-        Image: !Ref ECSImageName
-        MemoryReservation: 128
-        PortMappings:
-          - HostPort: 80
-            Protocol: tcp
-            ContainerPort: 80
+      ContainerDefinitions:
+        - Name: !Sub ${SystemName}-ECSContainer
+          Image: !Ref ECSImageName
+          MemoryReservation: 128
+          PortMappings:
+            - HostPort: 80
+              Protocol: tcp
+              ContainerPort: 80
