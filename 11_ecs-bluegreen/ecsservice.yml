@@ -1,0 +1,73 @@
+
+Description: Template for creating an ECS Service.
+
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  SystemName:
+    Description: Enter SystemName
+    Type: String
+    Default: sample
+
+  Env:
+    Description: HON, DEV
+    Type: String
+    Default: DEV
+
+VpcId: # 受け取る値を定義する
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>
+    Default: EcsCluster
+
+  # ECSTaskCPUUnit:
+  #   AllowedValues: [256, 512, 1024, 2048, 4096]
+  #   Type: String
+  #   Default: 256
+
+  # ECSTaskMemory:
+  #   AllowedValues: [256, 512, 1024, 2048, 4096]
+  #   Type: String
+  #   Default: 512
+
+  # ECSTaskExecutionRole:
+  #   Type: String
+  #   Default: arn:aws:iam:${AWS::AccountId}:role/ecsTaskExecutionRole
+
+  # ECSImageName:
+  #   Type: String
+  #   Default: ECSImage
+
+  ECSTaskDesiredCount:
+      Type: Number
+      Default: 1
+
+  EcsCluster:
+    Description: Select ecs cluster from SSM Prameter Store.
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: sample-DEV-ecs-cluster
+ 
+# ------------------------------------------------------------#
+#  ECSService
+# ------------------------------------------------------------#
+Resources:
+  ECSService:
+    Type: AWS::ECS::Service
+    DependsOn: ALBListener1
+    Properties:
+      Cluster: !Ref EcsCluster
+      DesiredCount: !Ref ECSTaskDesiredCount
+      DeploymentController:
+        Type: CODE_DEPLOY
+      LaunchType: FARGATE
+      LoadBalancers:
+        - TargetGroupArn: !Ref TargetGroup1
+          ContainerPort: 80
+          ContainerName: !Sub '${ProjectName}-${ECSContainerName}'
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !Ref ECSSecurityGroupId
+          Subnets:
+            - !Ref ECSSubnetId1
+            - !Ref ECSSubnetId2
+      ServiceName: !Sub '${ProjectName}-${ECSServiceName}'
+      TaskDefinition: !Ref ECSTaskDefinition

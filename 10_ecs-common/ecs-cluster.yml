@@ -26,4 +26,10 @@ Resources:
         - Key  : Name
           Value: !Sub ${SystemName}-${Env}-ecs-cluster
 
-  
+  ecscluster:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: !Sub ${SystemName}-${Env}-ecs-cluster
+      Description: Create ecs cluster in SSM Parameter Store.
+      Type: String
+      Value: !Ref EcsCluster
