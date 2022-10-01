@@ -48,6 +48,16 @@ VpcId: # 受け取る値を定義する
     Description: Select sampleALB from SSM Prameter Store.
     Type: AWS::SSM::Parameter::Value<String>
     Default: sample-DEV-alb
+
+  sampleTargetGroup01:
+    Description: Select ALB TargetGroup01 from SSM Prameter Store.
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: sample-DEV-alb-targetgroup01
+ 
+  sampleTargetGroup02:
+    Description: Select ALB TargetGroup02 from SSM Prameter Store.
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: sample-DEV-alb-targetgroup02
  
 # ------------------------------------------------------------#
 #  ECSService
@@ -63,9 +73,9 @@ Resources:
         Type: CODE_DEPLOY
       LaunchType: FARGATE
       LoadBalancers:
-        - TargetGroupArn: !Ref TargetGroup1
+        - TargetGroupArn: !Ref sampleTargetGroup01
           ContainerPort: 80
-          ContainerName: !Sub '${ProjectName}-${ECSContainerName}'
+          ContainerName: !Sub ${SystemName}-ECSContainer
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
