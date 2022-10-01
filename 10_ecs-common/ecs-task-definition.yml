@@ -1,3 +1,35 @@
+Description: Template for creating an ECS task.
+
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  SystemName:
+    Description: Enter SystemName
+    Type: String
+    Default: sample
+
+  Env:
+    Description: HON, DEV
+    Type: String
+    Default: DEV
+
+  ECSTaskCPUUnit:
+    AllowedValues: [256, 512, 1024, 2048, 4096]
+    Type: String
+    Default: 256
+
+  ECSTaskMemory:
+    AllowedValues: [256, 512, 1024, 2048, 4096]
+    Type: String
+    Default: 512
+
+  ECSTaskExecutionRole:
+    Type: String
+    Default: arn:aws:iam:${AWS::AccountId}:role/ecsTaskExecutionRole
+
+  ECSImageName:
+    Type: String
+    Default: ECSImage
+
 # ------------------------------------------------------------#
 #  ECS TaskDefinition
 # ------------------------------------------------------------#
@@ -5,25 +37,18 @@ ECSTaskDefinition:
   Type: 'AWS::ECS::TaskDefinition'
   Properties:
     Cpu: !Ref ECSTaskCPUUnit
-    ExecutionRoleArn: !GetAtt ECSTaskExecutionRole.Arn
-    Family: !Sub '${ProjectName}-${ECSTaskName}'
+    ExecutionRoleArn: !Ref ECSTaskExecutionRole
+    Family: !Sub ${SystemName}-ECSTask
     Memory: !Ref ECSTaskMemory
     NetworkMode: awsvpc
     RequiresCompatibilities:
       - FARGATE
 
-    #ContainerDefinitions
-    ContainerDefinitions:
-      - Name: !Sub '${ProjectName}-${ECSContainerName}'
-        Image: !Ref ECSImageName
-        LogConfiguration:
-          LogDriver: awslogs
-          Options:
-            awslogs-group: !Ref ECSLogGroup
-            awslogs-region: !Ref 'AWS::Region'
-            awslogs-stream-prefix: !Ref ProjectName
-        MemoryReservation: 128
-        PortMappings:
-          - HostPort: 80
-            Protocol: tcp
-            ContainerPort: 80
+  ContainerDefinitions:
+    - Name: !Sub ${SystemName}-ECSContainer
+      Image: !Ref ECSImageName
+      MemoryReservation: 128
+      PortMappings:
+        - HostPort: 80
+          Protocol: tcp
+          ContainerPort: 80
