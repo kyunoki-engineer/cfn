@@ -13,7 +13,7 @@ Parameters:
     Default: DEV
 
 Resources:  
-  GenkoEcsCluster:
+  EcsCluster:
     Type: AWS::ECS::Cluster
     Properties: 
       CapacityProviders: 
