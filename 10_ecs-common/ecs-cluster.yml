@@ -12,14 +12,13 @@ Parameters:
     Type: String
     Default: DEV
 
-
 Resources:  
   GenkoEcsCluster:
     Type: AWS::ECS::Cluster
     Properties: 
       CapacityProviders: 
         - FARGATE
-      ClusterName: GenkoEcsCluster
+      ClusterName: EcsCluster
       ClusterSettings: 
         - Name : containerInsights 
           Value: enabled
