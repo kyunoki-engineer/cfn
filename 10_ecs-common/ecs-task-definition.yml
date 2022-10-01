@@ -33,6 +33,7 @@ Parameters:
 # ------------------------------------------------------------#
 #  ECS TaskDefinition
 # ------------------------------------------------------------#
+Resources:
 ECSTaskDefinition:
   Type: 'AWS::ECS::TaskDefinition'
   Properties:
