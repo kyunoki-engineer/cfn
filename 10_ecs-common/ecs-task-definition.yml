@@ -34,22 +34,22 @@ Parameters:
 #  ECS TaskDefinition
 # ------------------------------------------------------------#
 Resources:
-ECSTaskDefinition:
-  Type: 'AWS::ECS::TaskDefinition'
-  Properties:
-    Cpu: !Ref ECSTaskCPUUnit
-    ExecutionRoleArn: !Ref ECSTaskExecutionRole
-    Family: !Sub ${SystemName}-ECSTask
-    Memory: !Ref ECSTaskMemory
-    NetworkMode: awsvpc
-    RequiresCompatibilities:
-      - FARGATE
+  ECSTaskDefinition:
+    Type: 'AWS::ECS::TaskDefinition'
+    Properties:
+      Cpu: !Ref ECSTaskCPUUnit
+      ExecutionRoleArn: !Ref ECSTaskExecutionRole
+      Family: !Sub ${SystemName}-ECSTask
+      Memory: !Ref ECSTaskMemory
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
 
-  ContainerDefinitions:
-    - Name: !Sub ${SystemName}-ECSContainer
-      Image: !Ref ECSImageName
-      MemoryReservation: 128
-      PortMappings:
-        - HostPort: 80
-          Protocol: tcp
-          ContainerPort: 80
+    ContainerDefinitions:
+      - Name: !Sub ${SystemName}-ECSContainer
+        Image: !Ref ECSImageName
+        MemoryReservation: 128
+        PortMappings:
+          - HostPort: 80
+            Protocol: tcp
+            ContainerPort: 80
