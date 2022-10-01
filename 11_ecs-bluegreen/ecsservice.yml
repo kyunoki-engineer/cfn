@@ -44,6 +44,11 @@ VpcId: # 受け取る値を定義する
     Type: AWS::SSM::Parameter::Value<String>
     Default: sample-DEV-ecs-cluster
  
+  sampleALB:
+    Description: Select sampleALB from SSM Prameter Store.
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: sample-DEV-alb
+ 
 # ------------------------------------------------------------#
 #  ECSService
 # ------------------------------------------------------------#

@@ -121,15 +121,48 @@ Resources:
       Port: 8080
       Protocol: HTTP
 
-Outputs:
-  sampleALBListener1:
-    Description: sampleALBListener1
-    Value: !Ref sampleALBListener1
-    Export:
-      Name: sampleALBListener1
 
-  sampleALBListener2:
-    Description: sampleALBListener2
-    Value: !Ref sampleALBListener2
-    Export:
-      Name: sampleALBListener2
+# --------------------------------------------------------------
+# Parameter Store
+# --------------------------------------------------------------
+  SampleALBListener1:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: !Sub ${SystemName}-${Env}-alb-listener1
+      Description: Create sample ALBListener1 in SSM Parameter Store.
+      Type: String
+      Value: !Ref sampleALBListener1
+
+  SampleALBListener2:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: !Sub ${SystemName}-${Env}-alb-listener2
+      Description: Create sample ALBListener2 in SSM Parameter Store.
+      Type: String
+      Value: !Ref sampleALBListener2
+
+  samplealb:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: !Sub ${SystemName}-${Env}-alb
+      Description: Create sample ALB in SSM Parameter Store.
+      Type: String
+      Value: !Ref sampleALB
+
+  sampletargetgroup01:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: !Sub ${SystemName}-${Env}-alb-targetgroup01
+      Description: Create ALB TargetGroup01 in SSM Parameter Store.
+      Type: String
+      Value: !Ref sampleTargetGroup01
+
+  sampletargetgroup02:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: !Sub ${SystemName}-${Env}-alb-targetgroup02
+      Description: Create ALB TargetGroup02 in SSM Parameter Store.
+      Type: String
+      Value: !Ref sampleTargetGroup02
+
+
