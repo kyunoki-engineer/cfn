@@ -60,6 +60,16 @@ Resources:
       Type: String
       Value: !Ref jumpserver
 
+  JumpServerAMI:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: !Sub ${SystemName}-${Env}-JumpServer-AMI
+      Description: Create JumpServer AMI in SSM Parameter Store.
+      Type: String
+      Value: ami-0b7546e839d7ace12
+
+
+
 # --------------------------------------------------------------
 # Outputs
 # --------------------------------------------------------------
