@@ -45,7 +45,7 @@ Parameters:
     Type: AWS::SSM::Parameter::Value<String>
     Default: sample-DEV-alb-listener1
 
-  SampleALBListener1:
+  TargetGroup01:
     Description: Select ALB targetgroup01 from SSM Prameter Store.
     Type: AWS::SSM::Parameter::Value<String>
     Default: sample-dev-alb-targetgroup01
@@ -89,7 +89,7 @@ Resources:
 
   ECSService:
     Type: AWS::ECS::Service
-    DependsOn: !Ref SampleALBListener1
+    DependsOn: SampleALBListener1
     Properties:
       Cluster: !Ref ECSCluster
       DesiredCount: !Ref ECSTaskDesiredCount
@@ -97,7 +97,7 @@ Resources:
       #   Type: CODE_DEPLOY
       LaunchType: FARGATE
       LoadBalancers:
-        - TargetGroupArn: !Ref SampleALBListener1
+        - TargetGroupArn: !Ref TargetGroup01
           ContainerPort: 80
           ContainerName: !Sub ${SystemName}-ECSContainer
       NetworkConfiguration:
