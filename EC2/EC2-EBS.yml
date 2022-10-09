@@ -21,9 +21,6 @@ Parameters:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: sample-DEV-ec2-ImageId
 
-
-  
-
 Resources:
 #EC2
   jumpserver:
@@ -51,30 +48,21 @@ Resources:
         Ebs:
           VolumeSize: 8
 
-#   Rubyweb2:
-#     Type: AWS::EC2::Instance
-#     Properties:
-#       ImageId: !Ref ImageId
-#       AvailabilityZone: "ap-northeast-1c"
-#       InstanceType: t2.micro
-#       KeyName: !Ref KeyName
-#       NetworkInterfaces:
-#         - AssociatePublicIpAddress: "true"
-#           DeviceIndex: "0"
-#           SubnetId: !ImportValue PublicSubnet2
-#           GroupSet:
-#            - !ImportValue EC2SecurityGroup02
-#       # SubnetId: !ImportValue PublicSubnet2
-#       # SecurityGroupIds:
-#       #   - !ImportValue EC2SecurityGroup02
-#       Tags:
-#           - Key: Name
-#             Value: sample-ec2-Rubyweb2
-# # ebs
-#       BlockDeviceMappings:
-#       - DeviceName: /dev/xvda
-#         Ebs:
-#           VolumeSize: 8
+# --------------------------------------------------------------
+# Parameter Store
+# --------------------------------------------------------------
+
+  JumpServer:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: !Sub ${SystemName}-${Env}-JumpServer-ID
+      Description: Create JumpServer in SSM Parameter Store.
+      Type: String
+      Value: !Ref jumpserver
+
+# --------------------------------------------------------------
+# Outputs
+# --------------------------------------------------------------
 
 Outputs:
   jumpserver:

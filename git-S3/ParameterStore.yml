@@ -68,9 +68,6 @@ Resources:
 
 #--------------------------------------------------      
 
-
-
-  Ec2Image:
     Type: AWS::SSM::Parameter
     Properties: 
       Name: !Sub ${SystemName}-${Env}-ec2-ImageId

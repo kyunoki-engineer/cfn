@@ -62,3 +62,24 @@ Resources:
       Description: Create ECS SecurityGroup01 in SSM Parameter Store.
       Type: String
       Value: !Ref ECSSecurityGroup01
+
+
+
+# Type: AWS::SSM::Parameter
+
+# 1.EC2 SecurityGroup を作成 OK
+# 2.EC2 SecurityGroup 後にIDを確認 OK
+# 3.IDを使って、パラメータストアを作成する　Type: AWS::SSM::Parameter OK
+
+# ecssecuritygroup01:
+#     Type: AWS::SSM::Parameter
+#     Properties: 
+#       Name: !Sub ${SystemName}-${Env}-ECS-SecurityGroup01
+#       Description: Create ECS SecurityGroup01 in SSM Parameter Store.
+#       Type: String
+#       Value: EC2 SecurityGroup　ID
+
+# 4.パラメータストアの呼び出し
+# EC2ImageId:
+#     Type: AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id>
+#     Default: EC2 SecurityGroup　ID
