@@ -53,3 +53,31 @@ Resources:
             - HostPort: 80
               Protocol: tcp
               ContainerPort: 80
+
+  # ------------------------------------------------------------#
+  #  ECS Service
+  # ------------------------------------------------------------#
+
+  ECSService:
+    Type: AWS::ECS::Service
+    DependsOn: ALBListener1
+    Properties:
+      Cluster: !Ref ECSCluster
+      DesiredCount: !Ref ECSTaskDesiredCount
+      DeploymentController:
+        Type: CODE_DEPLOY
+      LaunchType: FARGATE
+      LoadBalancers:
+        - TargetGroupArn: !Ref TargetGroup1
+          ContainerPort: 80
+          ContainerName: !Sub '${ProjectName}-${ECSContainerName}'
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !Ref ECSSecurityGroupId
+          Subnets:
+            - !Ref ECSSubnetId1
+            - !Ref ECSSubnetId2
+      ServiceName: !Sub '${ProjectName}-${ECSServiceName}'
+      TaskDefinition: !Ref ECSTaskDefinition
