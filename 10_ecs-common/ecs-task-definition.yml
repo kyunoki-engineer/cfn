@@ -30,6 +30,36 @@ Parameters:
     Type: String
     Default: ECSImage
 
+  ECSCluster:
+    Description: Select ECSCluster from SSM Prameter Store.
+    Type: AWS::SSM::Parameter::Value<String>
+    Value: sample-DEV-ecs-cluster
+
+  #ECSTaskDesiredCount
+  ECSTaskDesiredCount:
+    Type: Number
+    Default: 1
+
+  SampleALBListener1:
+    Description: Select ALBListner from SSM Prameter Store.
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: sample-DEV-alb-listener1
+
+  SampleALBListener1:
+    Description: Select ALB targetgroup01 from SSM Prameter Store.
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: sample-dev-alb-targetgroup01
+
+  ecssecuritygroup01:
+    Description: Select ECS SecurityGroup01 from SSM Prameter Store.
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: sample-DEV-ECS-SecurityGroup01
+
+  ecssecuritygroup01:
+    Description: Select ECS SecurityGroup01 from SSM Prameter Store.
+    Type: AWS::SSM::Parameter::Value<List<String>>
+    Default: sample-DEV-ps-subnetids-genko
+
 # ------------------------------------------------------------#
 #  ECS TaskDefinition
 # ------------------------------------------------------------#
@@ -44,7 +74,6 @@ Resources:
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
-
       ContainerDefinitions:
         - Name: !Sub ${SystemName}-ECSContainer
           Image: !Ref ECSImageName
@@ -60,24 +89,42 @@ Resources:
 
   ECSService:
     Type: AWS::ECS::Service
-    DependsOn: ALBListener1
+    DependsOn: !Ref SampleALBListener1
     Properties:
       Cluster: !Ref ECSCluster
       DesiredCount: !Ref ECSTaskDesiredCount
-      DeploymentController:
-        Type: CODE_DEPLOY
+      # DeploymentController:
+      #   Type: CODE_DEPLOY
       LaunchType: FARGATE
       LoadBalancers:
-        - TargetGroupArn: !Ref TargetGroup1
+        - TargetGroupArn: !Ref SampleALBListener1
           ContainerPort: 80
-          ContainerName: !Sub '${ProjectName}-${ECSContainerName}'
+          ContainerName: !Sub ${SystemName}-ECSContainer
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           SecurityGroups:
-            - !Ref ECSSecurityGroupId
-          Subnets:
-            - !Ref ECSSubnetId1
-            - !Ref ECSSubnetId2
-      ServiceName: !Sub '${ProjectName}-${ECSServiceName}'
+            - !Ref ecssecuritygroup01
+          Subnets: !Ref sample-DEV-ps-subnetids-genko
+      ServiceName: ! ${SystemName}-ECSService
       TaskDefinition: !Ref ECSTaskDefinition
+
+# --------------------------------------------------------------
+# Parameter Store
+# --------------------------------------------------------------
+
+  ecstaskdefinition:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: !Sub ${SystemName}-${Env}-ECS-TaskDefinition
+      Description: Create ECS TaskDefinition in SSM Parameter Store.
+      Type: String
+      Value: !Ref ECSTaskDefinition
+
+  ecsservice:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: !Sub ${SystemName}-${Env}-ECS-Service
+      Description: Create ECS TaskDefinition in SSM Parameter Store.
+      Type: String
+      Value: !Ref ECSService
