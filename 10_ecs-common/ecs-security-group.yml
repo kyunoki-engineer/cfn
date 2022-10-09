@@ -103,7 +103,7 @@ Resources:
       Description: Create a ecs securitygroups for the VPC in the SSM Parameter Store.
       Type: StringList
       Value:
-      - !Ref ECSSecurityGroup01, 
+      - !Ref ECSSecurityGroup01 
       - !Ref ECSSecurityGroup02
 
 
