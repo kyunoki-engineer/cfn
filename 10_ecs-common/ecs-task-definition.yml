@@ -12,6 +12,11 @@ Parameters:
     Type: String
     Default: DEV
 
+    # GenkoSubnetids: 
+    # Description: Create a genko subnetids for the VPC in the SSM Parameter Store.
+    # Type: AWS::SSM::Parameter::Value<List<String>>
+    # Default: sample-DEV-ps-subnetids-genko
+
   ECSTaskCPUUnit:
     AllowedValues: [256, 512, 1024, 2048, 4096]
     Type: String
@@ -40,20 +45,15 @@ Parameters:
     Type: Number
     Default: 1
 
-  SampleALBListener1:
-    Description: Select ALBListner from SSM Prameter Store.
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: sample-DEV-alb-listener1
-
   TargetGroup01:
     Description: Select ALB targetgroup01 from SSM Prameter Store.
     Type: AWS::SSM::Parameter::Value<String>
     Default: sample-dev-alb-targetgroup01
 
-  ecssecuritygroup01:
-    Description: Select ECS SecurityGroup01 from SSM Prameter Store.
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: sample-DEV-ECS-SecurityGroup01
+  # ecssecuritygroup01:
+  #   Description: Select ECS SecurityGroup01 from SSM Prameter Store.
+  #   Type: AWS::SSM::Parameter::Value<String>
+  #   Default: sample-DEV-ECS-SecurityGroup01
 
   ecssecuritygroups:
     Description: Select ECS SecurityGroups from SSM Prameter Store.
@@ -89,24 +89,23 @@ Resources:
 
   ECSService:
     Type: AWS::ECS::Service
-    DependsOn: SampleALBListener1
     Properties:
       Cluster: !Ref ECSCluster
-      DesiredCount: !Ref ECSTaskDesiredCount
+      DesiredCount: !Sub ${ECSTaskDesiredCount} 
       # DeploymentController:
       #   Type: CODE_DEPLOY
       LaunchType: FARGATE
       LoadBalancers:
         - TargetGroupArn: !Ref TargetGroup01
-          ContainerPort: 80
-          ContainerName: !Sub ${SystemName}-ECSContainer
+        - ContainerPort: 80
+        - ContainerName: !Sub ${SystemName}-ECSContainer
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           SecurityGroups:
             - !Ref ecssecuritygroups
-          Subnets: !Ref sample-DEV-ps-subnetids-genko
-      ServiceName: ! ${SystemName}-ECSService
+          Subnets: subnet-04a6341245e5db30e
+      ServiceName: !Sub ${SystemName}-ECSService
       TaskDefinition: !Ref ECSTaskDefinition
 
 # --------------------------------------------------------------
