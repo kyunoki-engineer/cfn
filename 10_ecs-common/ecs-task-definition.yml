@@ -33,7 +33,7 @@ Parameters:
   ECSCluster:
     Description: Select ECSCluster from SSM Prameter Store.
     Type: AWS::SSM::Parameter::Value<String>
-    Value: sample-DEV-ecs-cluster
+    Default: sample-DEV-ecs-cluster
 
   #ECSTaskDesiredCount
   ECSTaskDesiredCount:
