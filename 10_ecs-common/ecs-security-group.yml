@@ -96,15 +96,15 @@ Resources:
   #     Type: String
   #     Value: !Ref ECSSecurityGroup01
 
-  ecssecuritygroups:
-    Type: AWS::SSM::Parameter
-    Properties: 
-      Name: !Sub ${SystemName}-${Env}-ecs-securitygroups
-      Description: Create a ecs securitygroups for the VPC in the SSM Parameter Store.
-      Type: StringList
-      Value:
-      - !Ref ECSSecurityGroup01 
-      - !Ref ECSSecurityGroup02
+  # ecssecuritygroups:
+  #   Type: AWS::SSM::Parameter
+  #   Properties: 
+  #     Name: !Sub ${SystemName}-${Env}-ecs-securitygroups
+  #     Description: Create a ecs securitygroups for the VPC in the SSM Parameter Store.
+  #     Type: StringList
+  #     Value:
+  #     - !Ref ECSSecurityGroup01 
+  #     - !Ref ECSSecurityGroup02
 
 
 
