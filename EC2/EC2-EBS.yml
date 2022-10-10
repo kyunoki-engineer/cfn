@@ -30,6 +30,7 @@ Resources:
       AvailabilityZone: "ap-northeast-1a"
       InstanceType: t2.micro
       KeyName: !Ref KeyName
+      # IamInstanceProfile: 
       NetworkInterfaces:
         - AssociatePublicIpAddress: "true"
           DeviceIndex: "0"
@@ -47,6 +48,22 @@ Resources:
       - DeviceName: /dev/xvda
         Ebs:
           VolumeSize: 8
+# --------------------------------------------------------------
+# InstanceProfile 
+# --------------------------------------------------------------
+
+  jumpserverip: 
+      Type: AWS::EC2::Instance
+      Properties: 
+        # 中略
+        IamInstanceProfile: !Ref InstanceProfile  
+
+# --------------------------------------------------------------
+# IAM
+# --------------------------------------------------------------
+
+
+
 
 # --------------------------------------------------------------
 # Parameter Store

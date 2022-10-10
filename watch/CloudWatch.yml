@@ -11,33 +11,41 @@ Parameters:
     Description: Enter SystemName
     Type: String
     Default: sample
- SNSTopicName:
-    Description: SNS Topic Name
+
+ FormEC2IamRole:
+    Description: CW IAM Name
     Type: String
-    Default: arn:aws:sns:XXXXXXXXXXX  # SNS トピック
+    Default: arn:aws:iam::448678968380:role/sample-dev-CloudWatchAgentServerPolicy  # SNS トピック
 
 Resources:
+  InstanceProfile:
+      Type: AWS::IAM::InstanceProfile
+      Properties:
+        Path: "/"
+        Roles:
+        - !Ref FormEC2IamRole
+
   #ALB死活監視アラーム作成
-  SNSStatusChekFailedAlarm:
-    Type: AWS::CloudWatch::Alarm
-    Properties:
-      AlarmName: "ut-ALB"
-      AlarmDescription: "Alarm for monitoring HealthyHostCount"
-      ActionsEnabled: true
-      AlarmActions: 
-      - !ImportValue ut-sns-topic-arn
-      MetricName: "HealthyHostCount"
-      Namespace: "AWS/ApplicationELB"
-      Statistic: "Minimum"
-      Dimensions: 
-      - 
-        Name: "TargetGroup"
-        Value: !ImportValue ut-tgn-fullname
-      - 
-        Name: "LoadBalancer"
-        Value: !ImportValue ut-alb-fullname
-      Period: 60
-      EvaluationPeriods: 2
-      Threshold: 1
-      ComparisonOperator: "LessThanOrEqualToThreshold"
-      TreatMissingData: "missing"
+  # SNSStatusChekFailedAlarm:
+  #   Type: AWS::CloudWatch::Alarm
+  #   Properties:
+  #     AlarmName: "ut-ALB"
+  #     AlarmDescription: "Alarm for monitoring HealthyHostCount"
+  #     ActionsEnabled: true
+  #     AlarmActions: 
+  #     - !ImportValue ut-sns-topic-arn
+  #     MetricName: "HealthyHostCount"
+  #     Namespace: "AWS/ApplicationELB"
+  #     Statistic: "Minimum"
+  #     Dimensions: 
+  #     - 
+  #       Name: "TargetGroup"
+  #       Value: !ImportValue ut-tgn-fullname
+  #     - 
+  #       Name: "LoadBalancer"
+  #       Value: !ImportValue ut-alb-fullname
+  #     Period: 60
+  #     EvaluationPeriods: 2
+  #     Threshold: 1
+  #     ComparisonOperator: "LessThanOrEqualToThreshold"
+  #     TreatMissingData: "missing"
