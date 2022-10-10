@@ -1,33 +1,37 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: References to created SNS Topic
+Description: References to created CW IAM.
 
 Parameters:
-  Env:
-    Description: HON, DEV
+  env:
+    Description: hon, dev
     Type: String
-    Default: DEV
+    Default: dev
 
   SystemName:
     Description: Enter SystemName
     Type: String
     Default: sample
 
- SNSTopicName:
-    Description: SNS Topic Name
-    Type: String
-    Default: arn:aws:sns:XXXXXXXXXXX  # SNS トピック
+Resources:
+  # CodeWatchAgentを実行できるIAMRole
+  FormEC2IamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      RoleName: !Sub ${SystemName}-${env}-CloudWatchAgentServerPolicy
+      # EC2に適した管理ポリシーのARNをここに列挙する。
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
 
-Type: AWS::IAM::Role
-Properties: 
-  AssumeRolePolicyDocument: Json
-  Description: String
-  ManagedPolicyArns: 
-    - String
-  MaxSessionDuration: Integer
-  Path: String
-  PermissionsBoundary: String
-  Policies: 
-    - Policy
-  RoleName: String
-  Tags: 
-    - Tag
+      Tags: 
+        - Key: Name
+          Value: CloudWatchAgentServerPolicyRole
