@@ -12,11 +12,6 @@ Parameters:
     Type: String
     Default: DEV
 
-    # GenkoSubnetids: 
-    # Description: Create a genko subnetids for the VPC in the SSM Parameter Store.
-    # Type: AWS::SSM::Parameter::Value<List<String>>
-    # Default: sample-DEV-ps-subnetids-genko
-
   ECSTaskCPUUnit:
     AllowedValues: [256, 512, 1024, 2048, 4096]
     Type: String
@@ -29,7 +24,7 @@ Parameters:
 
   ECSTaskExecutionRole:
     Type: String
-    Default: arn:aws:iam:${AWS::AccountId}:role/ecsTaskExecutionRole
+    Default: arn:aws:iam::448678968380:role/sample-ECSTaskExecutionRolePolicy
 
   ECSImageName:
     Type: String
@@ -50,15 +45,20 @@ Parameters:
     Type: AWS::SSM::Parameter::Value<String>
     Default: sample-dev-alb-targetgroup01
 
-  # ecssecuritygroup01:
-  #   Description: Select ECS SecurityGroup01 from SSM Prameter Store.
-  #   Type: AWS::SSM::Parameter::Value<String>
-  #   Default: sample-DEV-ECS-SecurityGroup01
-
   ecssecuritygroups:
     Description: Select ECS SecurityGroups from SSM Prameter Store.
     Type: AWS::SSM::Parameter::Value<List<String>>
     Default: sample-DEV-ecs-securitygroups
+  
+  #ECSSubnet1
+  ECSSubnetId1:
+    Description: 'ECS Subnet 1st'
+    Type: AWS::EC2::Subnet::Id
+
+  #ECSSubnet2
+  ECSSubnetId2:
+    Description: 'ECS Subnet 2st'
+    Type: AWS::EC2::Subnet::Id
 
 # ------------------------------------------------------------#
 #  ECS TaskDefinition
@@ -74,6 +74,7 @@ Resources:
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
+
       ContainerDefinitions:
         - Name: !Sub ${SystemName}-ECSContainer
           Image: !Ref ECSImageName
@@ -91,20 +92,24 @@ Resources:
     Type: AWS::ECS::Service
     Properties:
       Cluster: !Ref ECSCluster
-      DesiredCount: !Sub ${ECSTaskDesiredCount} 
+      DesiredCount: 1
       # DeploymentController:
       #   Type: CODE_DEPLOY
       LaunchType: FARGATE
       LoadBalancers:
         - TargetGroupArn: !Ref TargetGroup01
-        - ContainerPort: 80
-        - ContainerName: !Sub ${SystemName}-ECSContainer
+          ContainerPort: 80
+          ContainerName: !Sub ${SystemName}-ECSContainer
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           SecurityGroups:
-            - !Ref ecssecuritygroups
-          Subnets: subnet-04a6341245e5db30e
+            - sg-0808c7427be0e2f36
+            - sg-0eb56f0cb840917d8
+          Subnets:
+            - !Ref ECSSubnetId1
+            - !Ref ECSSubnetId2
+
       ServiceName: !Sub ${SystemName}-ECSService
       TaskDefinition: !Ref ECSTaskDefinition
 

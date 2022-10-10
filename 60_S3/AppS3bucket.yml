@@ -17,7 +17,7 @@ Parameters:
     Default: sample-DEV-ps-vpcid
 
 Resources:
-  MyS3Bucket:
+  ArtifactBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub ${SystemName}-${env}-ss-s3bucket
+      BucketName: !Sub ${SystemName}-${env}-artifact-s3bucket
